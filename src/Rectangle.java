@@ -3,16 +3,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Rectangle implements Serializable {
-    ArrayList<Point> points = new ArrayList<Point>();
-    double width;
-    double height;
+    //ArrayList<Point> points = new ArrayList<Point>();
+    Point minPoint;
+    Point maxPoint;
 
-    public Rectangle(Point p1, Point p2, Point p3, Point p4) {
-        this.points = new ArrayList<Point>(Arrays.asList(p1, p2, p3, p4));
-        this.getDimensions();
+    public Rectangle() {
+
     }
 
-    public Point lowerPoint() {
+    public Rectangle(Point p1, Point p2, Point p3, Point p4) {
+        ArrayList<Point> points = new ArrayList<Point>(Arrays.asList(p1, p2, p3, p4));
+        this.minPoint = lowerPoint(points);
+        this.maxPoint = higherPoint(points);
+    }
+
+    public Point lowerPoint(ArrayList<Point> points) {
         Point minPoint = new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
         for (Point p : points) {
         	minPoint = minPoint.compare(p) ? minPoint : p;
@@ -20,7 +25,7 @@ public class Rectangle implements Serializable {
         return minPoint;
     }
 
-    public Point higherPoint() {
+    public Point higherPoint(ArrayList<Point> points) {
         Point maxPoint = new Point(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
         for (Point p : points) {
         	maxPoint = !maxPoint.compare(p) ? maxPoint : p;
@@ -28,20 +33,20 @@ public class Rectangle implements Serializable {
         return maxPoint;
     }
 
-    public void getDimensions() {
-        Point maxPoint = this.lowerPoint();
-        Point minPoint = this.higherPoint();
-        this.width = maxPoint.x - minPoint.x;
-        this.height = maxPoint.y - minPoint.y;
-
+    public double getArea() {
+        return (this.maxPoint.x - this.minPoint.x) * (this.maxPoint.y - this.minPoint.y);
     }
 
     public boolean overlaps (Rectangle r) {
-        Point minP = this.lowerPoint();
-        Point maxP = this.higherPoint();
-        Point minR = r.lowerPoint();
-        Point maxR = r.higherPoint();
-        return !(minP.y >= maxR.y || minR.y >= maxP.y || maxR.x <= minP.x || maxP.x <= minR.x);
+        return !(this.minPoint.y >= r.maxPoint.y || r.minPoint.y >= this.maxPoint.y || r.maxPoint.x <= this.minPoint.x || this.maxPoint.x <= r.minPoint.x);
         //return (maxP.x < maxR.x + r.width) && (maxP.x + width > maxR.x) && (maxP.y < maxR.y + r.height) && (maxP.y + height > maxR.y);
+    }
+
+    public double areaEnlarge (Rectangle s) {
+        double area = this.getArea();
+        Point newMinPoint = minPoint.compare(s.minPoint)? minPoint : s.minPoint;
+        Point newMaxPoint = !maxPoint.compare(s.maxPoint)? maxPoint : s.maxPoint;
+        double newArea = (newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y);
+        return newArea - area;
     }
 }

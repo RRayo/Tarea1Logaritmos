@@ -5,27 +5,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-
 public class Node implements Serializable {
     long serialVersionUID;
     Rectangle MBR;
-    ArrayList<Register> registers = new ArrayList<Register>(); //max 50??
-    //ArrayList<Node> sons = new ArrayList<Node>(); //max 50??
+    ArrayList<Register> registers = new ArrayList<Register>();
     Node father;
 
 
     //constructor nodo raiz
-    public Node(SerialGenerator sg) {
-        this.serialVersionUID = sg.generateSerial();
+    public Node() {
+        this.serialVersionUID = SerialGenerator.nextUID();
         this.father = null;
     }
 
 
     //Nodo normal
-    public Node(Node father, SerialGenerator sg) {
-        this.serialVersionUID = sg.generateSerial();
+    public Node(Node father) {
+        this.serialVersionUID = SerialGenerator.nextUID();
         this.father = father;
     }
+
 
 
 
@@ -45,10 +44,9 @@ public class Node implements Serializable {
         Point minPoint = null;
 
         for(Register reg: registers) {
-
             Rectangle r = reg.rectangle;
-            Point rLowerPoint = r.lowerPoint();
-            Point rHigherPoint = r.higherPoint();
+            Point rLowerPoint = r.minPoint;
+            Point rHigherPoint = r.maxPoint;
 
             if (maxPoint == null || minPoint == null) {
                 if (maxPoint == null) {
@@ -62,21 +60,33 @@ public class Node implements Serializable {
         }
 
         this.MBR = new Rectangle(minPoint, new Point(minPoint.x,maxPoint.y) , new Point(maxPoint.x,minPoint.y),maxPoint);
+
+        if(this.father != null){
+            father.adjust();
+        }
     }
 
 
     //Añade un rectangulo nuevo a la estructura
-    public void addRegister (Register reg){
-        //TODO antes de agregar rectangulo hay que ver si no hace overflow. En caso de que lo haga hacer split
-        this.registers.add(reg);
+    /*public void addNode (Node n){
+        this.registers.add(n.serialVersionUID);
         this.adjust();
+    }*/
+
+
+    public void addRegister(Register reg) {
+        this.registers.add(reg);
+        if (this.registers.size()>Rtree.M) {
+            Rtree.split(this);
+        }
+
     }
 
 
     //Guarda el nodo en un archivo identificado por su UID
     public void saveNode() {
         try {
-            String path = "/home/alejandro/tareas/8-semestre/ln/t1/";
+            String path = System.getProperty("user.dir");
             String nodeName = "node" + serialVersionUID + ".ser";
             FileOutputStream fileOut = new FileOutputStream(path + nodeName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -84,7 +94,7 @@ public class Node implements Serializable {
             out.close();
             fileOut.close();
             System.out.printf("Serialized " + nodeName + " is saved in" + path);
-        }catch(IOException i) {
+        } catch(IOException i) {
             i.printStackTrace();
         }
     }
