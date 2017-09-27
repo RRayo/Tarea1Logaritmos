@@ -41,7 +41,7 @@ public class Rectangle implements Serializable {
         Point maxP = this.higherPoint();
         Point minR = r.lowerPoint();
         Point maxR = r.higherPoint();
-        return !(minP.y >= maxR.y || minR.y >= maxP.y || maxR.x <= minP.x || maxP.x <= minR.x);
+        return !(minP.y > maxR.y || minR.y > maxP.y || maxR.x < minP.x || maxP.x < minR.x);
         //return (maxP.x < maxR.x + r.width) && (maxP.x + width > maxR.x) && (maxP.y < maxR.y + r.height) && (maxP.y + height > maxR.y);
     }
 }
