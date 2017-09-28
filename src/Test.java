@@ -33,7 +33,7 @@ public class Test {
 		System.out.println("R3 intersecta R1: " + r3.overlaps(r1));
 		System.out.println("R3 intersecta R2: " + r3.overlaps(r2));
 		System.out.println();
-		System.out.println("R1 intersecta R4: " + r2.overlaps(r4)); // se tocan en la arista
+		System.out.println("R1 intersecta R4: " + r1.overlaps(r4)); // se tocan en la arista
 		System.out.println("R1 intersecta R5: " + r1.overlaps(r5)); // uno dentro del otro
 		
 	}

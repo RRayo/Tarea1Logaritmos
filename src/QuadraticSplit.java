@@ -15,8 +15,8 @@ public class QuadraticSplit implements ISplitter{
         double mostWastefulArea = 0.0;
         Register mostWastefulRegister1 = null;
         Register mostWastefulRegister2 = null;
-        for (Register reg1 : n.registers) {
-            for (Register reg2 : n.registers) {
+        for (Register reg1 : this.registers) {
+            for (Register reg2 : this.registers) {
                 if(reg1 != reg2) {
                     Rectangle r1 = reg1.rectangle;
                     Rectangle r2 = reg2.rectangle;
@@ -31,12 +31,15 @@ public class QuadraticSplit implements ISplitter{
                 }
             }
         }
+        this.register1 = mostWastefulRegister1;
+        this.register2 = mostWastefulRegister2;
+        
         registers.remove(mostWastefulRegister1);
         registers.remove(mostWastefulRegister2);
     }
 
     @Override
-    public Register pickNext() {
+    public Register pickNext(Node n, Node nn) {
         Rectangle MBR1 = register1.rectangle;
         Rectangle MBR2 = register2.rectangle;
         Register chosenRegister = null;
@@ -56,19 +59,25 @@ public class QuadraticSplit implements ISplitter{
 
     @Override
     public void split(Node n,Queue<Long> nodes) {
-        registers =  new ArrayList<>(n.registers);
+        this.registers =  new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
         this.pickSeeds(n);
         Node nn = new Node(false);
+        
+        n.addRegister(this.register1, new LinkedList<>());
+        nn.addRegister(this.register2, new LinkedList<>());
+        
         while (!registers.isEmpty() || n.registers.size() >= (Rtree.M-Rtree.m+1) || nn.registers.size() >= (Rtree.M-Rtree.m+1)) { // o grupo se lleno
-            Register chosenRegister = pickNext();
+            Register chosenRegister = pickNext(n, nn);
             Rectangle r = chosenRegister.rectangle;
             if (Rtree.showdown(n,nn,r)) {
                 n.addRegister(chosenRegister,new LinkedList<>());
             } else {
                 nn.addRegister(chosenRegister,new LinkedList<>());
             }
-        } if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
+        } 
+        
+        if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
                 n.addRegister(reg,new LinkedList<>());
             }
