@@ -9,21 +9,16 @@ public class Node implements Serializable {
     long serialVersionUID;
     Rectangle MBR;
     ArrayList<Register> registers = new ArrayList<Register>();
-    Node father;
+    Boolean root;
 
 
-    //constructor nodo raiz
-    public Node() {
+    //constructor nodo
+    public Node(boolean root) {
         this.serialVersionUID = SerialGenerator.nextUID();
-        this.father = null;
+        this.root = root;
     }
 
 
-    //Nodo normal
-    public Node(Node father) {
-        this.serialVersionUID = SerialGenerator.nextUID();
-        this.father = father;
-    }
 
 
 
@@ -60,10 +55,6 @@ public class Node implements Serializable {
         }
 
         this.MBR = new Rectangle(minPoint, new Point(minPoint.x,maxPoint.y) , new Point(maxPoint.x,minPoint.y),maxPoint);
-
-        if(this.father != null){
-            father.adjust();
-        }
     }
 
 

@@ -1,5 +1,7 @@
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import static java.lang.Double.MAX_VALUE;
 
@@ -7,12 +9,10 @@ public class Rtree {
 
     public static SerialGenerator sg = new SerialGenerator();
     public static String path = "/home/alejandro/tareas/8-semestre/ln/t1/";
-
     public static String DIR;
-
     public long treeId;
-
     public static long M;
+    public static long m;
 
     static ISplitter splitter;
 
@@ -44,7 +44,16 @@ public class Rtree {
 
     //Devuelve un string con todos los ids que matchearon
     public static String search(Rectangle s, long nodeUID) {
-        Node node = loadNode(nodeUID);
+        Queue<Long> nodesQueue = new LinkedList<>();
+        nodesQueue.add(nodeUID);
+        StringBuilder sb = new StringBuilder();
+        while (!nodesQueue.isEmpty()) {
+            long UID = nodesQueue.remove();
+            Node n = Rtree.loadNode(UID);
+            //TODO esto
+        }
+
+        /*
         StringBuilder sb = new StringBuilder();
         if (node.registers.isEmpty()) {//es una hoja, solo compara con su rectangulo
             if (node.MBR.overlaps(s)) {
@@ -60,6 +69,9 @@ public class Rtree {
                 }
             }
         }
+        return sb.toString();
+
+        */
         return sb.toString();
     }
 

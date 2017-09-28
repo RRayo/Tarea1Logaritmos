@@ -1,17 +1,12 @@
 import java.util.ArrayList;
 
-import static java.lang.Double.MAX_VALUE;
-
 public class QuadraticSplit implements ISplitter{
 
 
-    ArrayList<Register> registers = new ArrayList<Register>();
-    ArrayList<Long> registerGroup1 = new ArrayList<Long>();
-    ArrayList<Long> registerGroup2 = new ArrayList<Long>();
-    Register register1;
-    Register register2;
-    long M;
-    long m;
+    private ArrayList<Register> registers = new ArrayList<>();
+    private Register register1 = null;
+    private Register register2 = null;
+
 
     @Override
     public void pickSeeds(Node n) {
@@ -33,9 +28,6 @@ public class QuadraticSplit implements ISplitter{
                     }
                 }
             }
-        }
-        if (mostWastefulRegister1.equals(null) || mostWastefulRegister2.equals(null)) {
-
         }
         registers.remove(mostWastefulRegister1);
         registers.remove(mostWastefulRegister2);
@@ -61,28 +53,32 @@ public class QuadraticSplit implements ISplitter{
     }
 
     @Override
-    public void split(Node n) {
-        registers = n.registers;
-        n.registers = new ArrayList<Register>();
+    public void split(Node n,Node father) {
+        registers =  new ArrayList<>(n.registers);
+        n.registers = new ArrayList<>();
         pickSeeds(n);
-        Node nn = new Node(n.father);
-        while (!registers.isEmpty() || n.registers.size() >= (M-m+1) || nn.registers.size() >= (M-m+1)) { // o grupo se lleno
+        Node nn = new Node(false);
+        while (!registers.isEmpty() || n.registers.size() >= (Rtree.M-Rtree.m+1) || nn.registers.size() >= (Rtree.M-Rtree.m+1)) { // o grupo se lleno
             Register chosenRegister = pickNext();
             Rectangle r = chosenRegister.rectangle;
             if (Rtree.showdown(n,nn,r)) {
-                n.addRegister(chosenRegister);//TODO arregar agregar nodo
+                n.addRegister(chosenRegister);
             } else {
                 nn.addRegister(chosenRegister);
             }
-        } if (n.registers.size() >= (M-m+1)) {
+        } if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
                 n.addRegister(reg);
             }
-        } else if (nn.registers.size() >= (M-m+1)) {
+        } else if (nn.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
                 nn.addRegister(reg);
             }
         }
+
+        //se guarda nn y se añade al padre
+        nn.saveNode();
+        father.addRegister(new Register(nn.MBR,nn.serialVersionUID));
     }
 }
 
