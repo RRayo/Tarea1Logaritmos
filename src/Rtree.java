@@ -8,29 +8,29 @@ import static java.lang.Double.MAX_VALUE;
 public class Rtree {
 
     public static SerialGenerator sg = new SerialGenerator();
-    public static String path = "/home/alejandro/tareas/8-semestre/ln/t1/";
-    public static String DIR;
-    public long treeId;
-    public static long M;
-    public static long m;
+    static String DIR;
+    private static long treeId;
+    static long M;
+    static long m;
 
-    static ISplitter splitter;
+    private static ISplitter splitter;
 
     public Rtree(){
-        Node n = new Node();
-        Node l = new Node(n);
-        Node r = new Node(n);
-        n.addNode(l);
-        n.addNode(r);
-        this.treeId = n.serialVersionUID;
+        Node n = new Node(true);
+        Node l = new Node(false);
+        Node r = new Node(false);
         l.saveNode();
         r.saveNode();
+        n.addRegister(new Register(l.MBR,l.serialVersionUID), new LinkedList<>());
+        n.addRegister(new Register(r.MBR,r.serialVersionUID), new LinkedList<>());
+        treeId = n.serialVersionUID;
         n.saveNode();
     }
 
-    public static Node loadNode(long UID) {
+    static Node loadNode(long UID) {
         String nodeName = "node" + UID + ".ser";
         try {
+            String path = "/home/alejandro/tareas/8-semestre/ln/t1/";
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(path + nodeName));
             return (Node) (in.readObject());
         } catch (Exception e) {
@@ -43,76 +43,111 @@ public class Rtree {
 
 
     //Devuelve un string con todos los ids que matchearon
-    public static String search(Rectangle s, long nodeUID) {
+    public static String search(Rectangle s) {
+
         Queue<Long> nodesQueue = new LinkedList<>();
-        nodesQueue.add(nodeUID);
+        nodesQueue.add(treeId);
         StringBuilder sb = new StringBuilder();
+
         while (!nodesQueue.isEmpty()) {
-            long UID = nodesQueue.remove();
-            Node n = Rtree.loadNode(UID);
-            //TODO esto
-        }
+            Node node = Rtree.loadNode(nodesQueue.remove());
 
-        /*
-        StringBuilder sb = new StringBuilder();
-        if (node.registers.isEmpty()) {//es una hoja, solo compara con su rectangulo
-            if (node.MBR.overlaps(s)) {
-                sb.append(node.serialVersionUID);
-            }
-        } else {
-            for (long reg : node.registers) {
-                Node n = Rtree.loadNode(reg);
-                Rectangle r = n.MBR;
-                if (r.overlaps(s)) {
-                    sb.append("/");
-                    sb.append(search(s,n.serialVersionUID));
+            assert node != null;
+
+            if (node.registers.isEmpty()) {//es una hoja, solo compara con su rectangulo
+                if (node.MBR.overlaps(s)) {
+                    sb.append(node.serialVersionUID);
+                    sb.append(",");
+                }
+            } else {
+                for (Register reg : node.registers) {
+                    Rectangle r = reg.rectangle;
+                    if (r.overlaps(s)) {
+                        nodesQueue.add(reg.serialVersionUID);
+                    }
                 }
             }
         }
         return sb.toString();
-
-        */
-        return sb.toString();
     }
 
 
-    public static void insertRectangle (long nodeUID, Rectangle s) {
-        //TODO antes de agregar rectangulo hay que ver si no hace overflow. En caso de que lo haga hacer split
-        Node node = Rtree.loadNode(nodeUID);
-        if (node.registers.isEmpty()) {
-            node.addRegister(new Register(s,node.serialVersionUID));
-        } else { //se busca el el rectangulo que lo haria crecer menos
+    public static void insertRectangle (Rectangle s) {
+        Queue<Long> nodesQueue = new LinkedList<>(); //va guardando el reocrrido
+        nodesQueue.add(treeId);
+        Node node = Rtree.loadNode(treeId);
 
-            double minAreaEnlarge = MAX_VALUE;
-            double areaEnlarge = 0.0;
-            long UID = 0L;
 
-            for (Register reg: node.registers) {
-                Rectangle r = reg.rectangle;
-                areaEnlarge = r.areaEnlarge(s);
-                if (areaEnlarge < minAreaEnlarge) {
-                    minAreaEnlarge = areaEnlarge;
-                    UID = reg.serialVersionUID;
+        while (node != null) {
+
+
+            if (node.registers.isEmpty()) { //es hoja
+
+                node.addRegister(new Register(s, node.serialVersionUID), nodesQueue);
+                node = null;
+
+            } else { //se busca el el rectangulo que lo haria crecer menos
+
+                double minAreaEnlarge = MAX_VALUE;
+                double areaEnlarge;
+                long UID = 0L;
+
+                for (Register reg : node.registers) {
+                    Rectangle r = reg.rectangle;
+                    areaEnlarge = r.areaEnlarge(s);
+                    if (areaEnlarge < minAreaEnlarge) {
+                        minAreaEnlarge = areaEnlarge;
+                        UID = reg.serialVersionUID;
+                    }
                 }
+                nodesQueue.add(UID);
+                node = Rtree.loadNode(UID);
             }
-            //busca recursivamente en el rectangulo que agranda menos el area
-            insertRectangle(UID,s);
-
         }
     }
 
-    public static double combinedArea (Rectangle r, Rectangle s) {
+
+
+    static double combinedArea(Rectangle r, Rectangle s) {
         Point newMinPoint = r.minPoint.compare(s.minPoint)? r.minPoint : s.minPoint;
         Point newMaxPoint = !r.maxPoint.compare(s.maxPoint)? r.maxPoint : s.maxPoint;
         return (newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y);
     }
 
-    public static void split (Node n) {
-        splitter.split(n);
+    static void split(Node n, Queue<Long> nodes) {
+        splitter.split(n, nodes);
     }
 
 
-    public static boolean showdown (Node n1, Node n2, Rectangle r) {
+    static boolean showdown(Node n1, Node n2, Rectangle r) {
+        Double areaGrow1 = combinedArea(n1.MBR,r);
+        Double areaGrow2 = combinedArea(n2.MBR,r);
+
+        if (Math.abs(areaGrow1 - areaGrow2) < 0.001) {
+            if (Math.abs(n1.MBR.getArea() - n2.MBR.getArea()) < 0.001) {
+                return n1.registers.size() <= n2.registers.size();
+            } else return n1.MBR.getArea() < n2.MBR.getArea();
+        } else if (areaGrow1 < areaGrow2) {
+            return true;
+        }
+        return false;
+    }
+
+
+    static void adjustTree(Queue<Long> nodes) {
+        while (!nodes.isEmpty()) {
+            Node node = Rtree.loadNode(nodes.remove());
+            if (node != null) {
+                node.adjust();
+            }
+        }
+    }
+}
+
+
+/*showdown sin simplificar
+
+    static boolean showdown(Node n1, Node n2, Rectangle r) {
         Double areaGrow1 = combinedArea(n1.MBR,r);
         Double areaGrow2 = combinedArea(n2.MBR,r);
 
@@ -133,14 +168,4 @@ public class Rtree {
         }
         return false;
     }
-
-
-
-
-
-
-
-
-
-
-}
+ */

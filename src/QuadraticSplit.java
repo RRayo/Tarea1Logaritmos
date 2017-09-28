@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class QuadraticSplit implements ISplitter{
 
@@ -53,7 +55,7 @@ public class QuadraticSplit implements ISplitter{
     }
 
     @Override
-    public void split(Node n,Node father) {
+    public void split(Node n,Queue<Long> nodes) {
         registers =  new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
         pickSeeds(n);
@@ -62,23 +64,36 @@ public class QuadraticSplit implements ISplitter{
             Register chosenRegister = pickNext();
             Rectangle r = chosenRegister.rectangle;
             if (Rtree.showdown(n,nn,r)) {
-                n.addRegister(chosenRegister);
+                n.addRegister(chosenRegister,new LinkedList<>());
             } else {
-                nn.addRegister(chosenRegister);
+                nn.addRegister(chosenRegister,new LinkedList<>());
             }
         } if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
-                n.addRegister(reg);
+                n.addRegister(reg,new LinkedList<>());
             }
         } else if (nn.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
-                nn.addRegister(reg);
+                nn.addRegister(reg,new LinkedList<>());
             }
         }
 
-        //se guarda nn y se añade al padre
+        //se guarda n y nn y se añade al padre
+        n.saveNode();
         nn.saveNode();
-        father.addRegister(new Register(nn.MBR,nn.serialVersionUID));
+
+        if(nodes.isEmpty()){ // es la raiz, se genera una nueva raiz
+            Node root = new Node(true);
+            root.addRegister(new Register(nn.MBR,nn.serialVersionUID),nodes);
+            root.addRegister(new Register(n.MBR,n.serialVersionUID),nodes);
+            root.saveNode();
+        } else {
+            try {
+                Rtree.loadNode(nodes.remove()).addRegister(new Register(nn.MBR, nn.serialVersionUID), nodes);
+            } catch (NullPointerException e) {
+                System.out.println("Nodes vacio");
+            }
+        }
     }
 }
 

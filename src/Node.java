@@ -3,22 +3,21 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Queue;
 
 
-public class Node implements Serializable {
+class Node implements Serializable {
     long serialVersionUID;
     Rectangle MBR;
     ArrayList<Register> registers = new ArrayList<Register>();
-    Boolean root;
+    private Boolean root;
 
 
     //constructor nodo
-    public Node(boolean root) {
+    Node(boolean root) {
         this.serialVersionUID = SerialGenerator.nextUID();
         this.root = root;
     }
-
-
 
 
 
@@ -34,7 +33,7 @@ public class Node implements Serializable {
         *__________________*(maxX,minY)
         (minX,minY)
      */
-    public void adjust() {
+    void adjust() {
         Point maxPoint = null;
         Point minPoint = null;
 
@@ -54,28 +53,25 @@ public class Node implements Serializable {
             }
         }
 
-        this.MBR = new Rectangle(minPoint, new Point(minPoint.x,maxPoint.y) , new Point(maxPoint.x,minPoint.y),maxPoint);
+        if (minPoint != null) {
+            this.MBR = new Rectangle(minPoint, new Point(minPoint.x,maxPoint.y) , new Point(maxPoint.x,minPoint.y),maxPoint);
+        }
+        this.saveNode();
     }
 
 
-    //Añade un rectangulo nuevo a la estructura
-    /*public void addNode (Node n){
-        this.registers.add(n.serialVersionUID);
-        this.adjust();
-    }*/
-
-
-    public void addRegister(Register reg) {
+    void addRegister(Register reg, Queue<Long> nodes) {
         this.registers.add(reg);
-        if (this.registers.size()>Rtree.M) {
-            Rtree.split(this);
+        if (this.registers.size() > Rtree.M) {
+            Rtree.split(this, nodes);
         }
-
+        nodes.add(this.serialVersionUID);
+        Rtree.adjustTree(nodes);
     }
 
 
     //Guarda el nodo en un archivo identificado por su UID
-    public void saveNode() {
+    void saveNode() {
         try {
             String path = System.getProperty("user.dir");
             String nodeName = "node" + serialVersionUID + ".ser";
@@ -91,7 +87,9 @@ public class Node implements Serializable {
     }
 
 
-
+    public Boolean getRoot() {
+        return root;
+    }
 }
 
 

@@ -1,6 +1,7 @@
+import java.util.Queue;
 
 public interface ISplitter {
     void pickSeeds(Node n);
     Register pickNext();
-    void split(Node n,Node father);
+    void split(Node n,Queue<Long> nodes);
 }
