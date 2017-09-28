@@ -15,6 +15,7 @@ class Node implements Serializable {
 
     //constructor nodo
     Node(boolean root) {
+        this.MBR = new Rectangle();
         this.serialVersionUID = SerialGenerator.nextUID();
         this.root = root;
     }
@@ -36,9 +37,13 @@ class Node implements Serializable {
     void adjust() {
         Point maxPoint = null;
         Point minPoint = null;
+        System.out.println("Numero de registros: " + registers.size());
 
         for(Register reg: registers) {
             Rectangle r = reg.rectangle;
+            /*if (r == null || r.maxPoint == null || r.minPoint == null) {
+                continue;
+            }*/
             Point rLowerPoint = r.minPoint;
             Point rHigherPoint = r.maxPoint;
 
@@ -62,6 +67,7 @@ class Node implements Serializable {
 
     void addRegister(Register reg, Queue<Long> nodes) {
         this.registers.add(reg);
+        this.saveNode();
         if (this.registers.size() > Rtree.M) {
             Rtree.split(this, nodes);
         }
@@ -73,14 +79,14 @@ class Node implements Serializable {
     //Guarda el nodo en un archivo identificado por su UID
     void saveNode() {
         try {
-            String path = System.getProperty("user.dir");
+            String path = Rtree.path;
             String nodeName = "node" + serialVersionUID + ".ser";
             FileOutputStream fileOut = new FileOutputStream(path + nodeName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(this);
             out.close();
             fileOut.close();
-            System.out.printf("Serialized " + nodeName + " is saved in" + path);
+            System.out.println("Serialized " + nodeName + " is saved in" + path);
         } catch(IOException i) {
             i.printStackTrace();
         }

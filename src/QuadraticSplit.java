@@ -58,7 +58,7 @@ public class QuadraticSplit implements ISplitter{
     public void split(Node n,Queue<Long> nodes) {
         registers =  new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
-        pickSeeds(n);
+        this.pickSeeds(n);
         Node nn = new Node(false);
         while (!registers.isEmpty() || n.registers.size() >= (Rtree.M-Rtree.m+1) || nn.registers.size() >= (Rtree.M-Rtree.m+1)) { // o grupo se lleno
             Register chosenRegister = pickNext();

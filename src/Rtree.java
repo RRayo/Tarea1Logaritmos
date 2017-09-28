@@ -9,16 +9,21 @@ public class Rtree {
 
     public static SerialGenerator sg = new SerialGenerator();
     static String DIR;
-    private static long treeId;
-    static long M;
-    static long m;
+    static long treeId;
+    static long M = 100L;
+    static long m = 2L;
+    public static String path  = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
 
     private static ISplitter splitter;
 
-    public Rtree(){
+    //TODO tamaño 0
+
+    public Rtree(String temp){
+        path = temp;
         Node n = new Node(true);
         Node l = new Node(false);
         Node r = new Node(false);
+        n.saveNode();
         l.saveNode();
         r.saveNode();
         n.addRegister(new Register(l.MBR,l.serialVersionUID), new LinkedList<>());
@@ -30,7 +35,6 @@ public class Rtree {
     static Node loadNode(long UID) {
         String nodeName = "node" + UID + ".ser";
         try {
-            String path = "/home/alejandro/tareas/8-semestre/ln/t1/";
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(path + nodeName));
             return (Node) (in.readObject());
         } catch (Exception e) {
@@ -77,12 +81,8 @@ public class Rtree {
         nodesQueue.add(treeId);
         Node node = Rtree.loadNode(treeId);
 
-
         while (node != null) {
-
-
             if (node.registers.isEmpty()) { //es hoja
-
                 node.addRegister(new Register(s, node.serialVersionUID), nodesQueue);
                 node = null;
 

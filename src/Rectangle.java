@@ -8,7 +8,8 @@ public class Rectangle implements Serializable {
     Point maxPoint;
 
     public Rectangle() {
-
+        this.minPoint = new Point();
+        this.maxPoint = new Point();
     }
 
     public Rectangle(Point p1, Point p2, Point p3, Point p4) {

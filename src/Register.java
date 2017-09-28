@@ -1,8 +1,8 @@
-
+import java.io.Serializable;
 
 //Registro es la tupla de un rectangulo y un identificador que representa a que nodo/hoja pertenecen
 //y en que archivo deberian ser buscados
-public class Register {
+public class Register implements Serializable{
     Rectangle rectangle;
     Long serialVersionUID;
 
