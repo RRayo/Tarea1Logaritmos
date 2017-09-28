@@ -31,6 +31,9 @@ public class QuadraticSplit implements ISplitter{
                 }
             }
         }
+        this.register1 = mostWastefulRegister1;
+        this.register2 = mostWastefulRegister2;
+        
         registers.remove(mostWastefulRegister1);
         registers.remove(mostWastefulRegister2);
     }
