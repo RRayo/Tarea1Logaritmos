@@ -34,11 +34,11 @@ public class Rtree {
 
     public static void newRoot(Node l, Node r) {
         Node n = new Node("R");
-        n.saveNode();
-        n.addRegister(new Register(l.MBR,l.serialVersionUID), new Stack<>());
-        n.addRegister(new Register(r.MBR,r.serialVersionUID), new Stack<>());
+        NodeMethods.saveNode(n);
+        NodeMethods.addRegister(n,new Register(l.MBR,l.serialVersionUID), new Stack<>());
+        NodeMethods.addRegister(n,new Register(r.MBR,r.serialVersionUID), new Stack<>());
         treeId = n.serialVersionUID;
-        n.saveNode();
+        NodeMethods.saveNode(n);
     }
 
     static Node loadNode(long UID) {
@@ -92,7 +92,7 @@ public class Rtree {
 
         while (node != null) {
             if (node.type.equals("L")) { //es hoja
-                node.addRegister(new Register(s, node.serialVersionUID), nodesStack);
+                NodeMethods.addRegister(node, new Register(s, node.serialVersionUID), nodesStack);
                 node = null;
 
             } else { //se busca el el rectangulo que lo haria crecer menos
@@ -148,12 +148,12 @@ public class Rtree {
         while (!nodes.isEmpty()) {
             Node node = Rtree.loadNode(nodes.pop());
             if (node != null) {
-                node.adjust();
+                NodeMethods.adjust(node);
                 Register newReg = new Register(node.MBR,node.serialVersionUID);
                 if (!nodes.isEmpty()) { //actualizar en padre
                     Node father = Rtree.loadNode(nodes.peek());
                     System.out.println("nodo padre" + father.serialVersionUID + " nodo hijo :" + newReg.serialVersionUID);
-                    father.updateRegister(newReg);
+                    NodeMethods.updateRegister(father, newReg);
                 }
             }
         }

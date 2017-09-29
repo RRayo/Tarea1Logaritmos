@@ -16,8 +16,8 @@ public abstract class AbstractSplitter implements ISplitter{
 
         Node nn = new Node(n.type);
 
-        n.addRegister(this.register1, new Stack<>());
-        nn.addRegister(this.register2, new Stack<>());
+        NodeMethods.addRegister(n, this.register1, new Stack<>());
+        NodeMethods.addRegister(nn, this.register2, new Stack<>());
 
         /*if (n.type.equals("R") ){ //raiz hizo split
             n.type = "N";
@@ -35,25 +35,25 @@ public abstract class AbstractSplitter implements ISplitter{
             Register chosenRegister = pickNext(n, nn);
             Rectangle r = chosenRegister.rectangle;
             if (Rtree.showdown(n,nn,r)) {
-                n.addRegister(chosenRegister,new Stack<>());
+                NodeMethods.addRegister(n, chosenRegister,new Stack<>());
             } else {
-                nn.addRegister(chosenRegister,new Stack<>());
+                NodeMethods.addRegister(nn, chosenRegister,new Stack<>());
             }
         }
 
         if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
-                n.addRegister(reg,new Stack<>());
+                NodeMethods.addRegister(n, reg,new Stack<>());
             }
         } else if (nn.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
-                nn.addRegister(reg,new Stack<>());
+                NodeMethods.addRegister(nn, reg,new Stack<>());
             }
         }
 
         //se guarda cambios de n y nn
-        n.saveNode();
-        nn.saveNode();
+        NodeMethods.saveNode(n);
+        NodeMethods.saveNode(nn);
 
         if(nodes.isEmpty()){ // es la raiz, se genera una nueva raiz
             n.type = "N";
@@ -61,7 +61,8 @@ public abstract class AbstractSplitter implements ISplitter{
             Rtree.newRoot(n,nn);
         } else { // se añade registro al padre
             try {
-                Rtree.loadNode(nodes.pop()).addRegister(new Register(nn.MBR, nn.serialVersionUID), nodes);
+                NodeMethods.addRegister( Rtree.loadNode(nodes.pop()), new Register(nn.MBR, nn.serialVersionUID), nodes);
+                //Rtree.loadNode(nodes.pop()).addRegister(new Register(nn.MBR, nn.serialVersionUID), nodes);
             } catch (NullPointerException e) {
                 System.out.println("Nodes vacio");
             }

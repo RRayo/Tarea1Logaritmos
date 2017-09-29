@@ -3,8 +3,8 @@ public class TestRTree {
         Rtree rtree1 = new Rtree("/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/");
         Node l = new Node("L");
         Node r = new Node("L");
-        l.saveNode();
-        r.saveNode();
+        NodeMethods.saveNode(l);
+        NodeMethods.saveNode(r);
         Rtree.newRoot(l,r);
 //        Node node1 = Rtree.loadNode(42L);
 //        System.out.println(node1.registers.size());

@@ -33,7 +33,7 @@ class Node implements Serializable {
         |                  |
         *__________________*(maxX,minY)
         (minX,minY)
-     */
+
     void adjust() {
         Point maxPoint = this.MBR.maxPoint;
         Point minPoint = this.MBR.minPoint;
@@ -52,8 +52,8 @@ class Node implements Serializable {
         this.MBR = new Rectangle(minPoint, new Point(minPoint.x,maxPoint.y) , new Point(maxPoint.x,minPoint.y),maxPoint);
         this.saveNode();
     }
-
-
+*/
+/*
     void addRegister(Register reg, Stack<Long> nodes) {
         this.registers.add(reg);
         this.saveNode();
@@ -63,8 +63,8 @@ class Node implements Serializable {
         //nodes.add(this.serialVersionUID);
         Rtree.adjustTree(nodes);
     }
-
-
+*/
+/*
     //Guarda el nodo en un archivo identificado por su UID
     void saveNode() {
         try {
@@ -81,11 +81,12 @@ class Node implements Serializable {
         }
     }
 
-
-    public String getRoot() {
+*/
+    /*public String getRoot() {
         return type;
-    }
+    }*/
 
+    /*
     public void updateRegister(Register newReg) {
         //System.out.println("Nodo " + this.serialVersionUID + " numero de registros: " + this.registers.size());
         for (Register reg : registers) {
@@ -97,6 +98,7 @@ class Node implements Serializable {
         }
         this.saveNode();
     }
+    */
 }
 
 

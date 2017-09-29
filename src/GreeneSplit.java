@@ -23,9 +23,9 @@ public class GreeneSplit extends LinearSplit {
             Register chosenRegister = pickNext(n, nn);
             Rectangle r = chosenRegister.rectangle;
             if (size > ((Rtree.M)/2 + 2)) {
-                n.addRegister(chosenRegister,new Stack<>());
+                NodeMethods.addRegister(n, chosenRegister,new Stack<>());
             } else {
-                nn.addRegister(chosenRegister,new Stack<>());
+                NodeMethods.addRegister(nn, chosenRegister,new Stack<>());
             }
             size--;
         }
@@ -35,8 +35,8 @@ public class GreeneSplit extends LinearSplit {
             nn.type = "N";
 
             //se guarda n y nn y se añade al padre
-            n.saveNode();
-            nn.saveNode();
+            NodeMethods.saveNode(n);
+            NodeMethods.saveNode(nn);
             Rtree.newRoot(n,nn);
 
         }
