@@ -40,7 +40,6 @@ public class Rectangle implements Serializable {
 
     public boolean overlaps (Rectangle r) {
         return !(this.minPoint.y > r.maxPoint.y || r.minPoint.y > this.maxPoint.y || r.maxPoint.x < this.minPoint.x || this.maxPoint.x < r.minPoint.x);
-        //return (maxP.x < maxR.x + r.width) && (maxP.x + width > maxR.x) && (maxP.y < maxR.y + r.height) && (maxP.y + height > maxR.y);
     }
 
     public double areaEnlarge (Rectangle s) {

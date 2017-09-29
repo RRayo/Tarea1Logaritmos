@@ -1,7 +1,7 @@
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
 import static java.lang.Double.MAX_VALUE;
 
@@ -20,14 +20,23 @@ public class Rtree {
 
     public Rtree(String temp){
         path = temp;
-        Node n = new Node(true);
-        Node l = new Node(false);
-        Node r = new Node(false);
+        /*Node n = new Node("R");
+        Node l = new Node("L");
+        Node r = new Node("L");
         n.saveNode();
         l.saveNode();
         r.saveNode();
         n.addRegister(new Register(l.MBR,l.serialVersionUID), new LinkedList<>());
         n.addRegister(new Register(r.MBR,r.serialVersionUID), new LinkedList<>());
+        treeId = n.serialVersionUID;
+        n.saveNode();*/
+    }
+
+    public static void newRoot(Node l, Node r) {
+        Node n = new Node("R");
+        n.saveNode();
+        n.addRegister(new Register(l.MBR,l.serialVersionUID), new Stack<>());
+        n.addRegister(new Register(r.MBR,r.serialVersionUID), new Stack<>());
         treeId = n.serialVersionUID;
         n.saveNode();
     }
@@ -38,7 +47,7 @@ public class Rtree {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(path + nodeName));
             return (Node) (in.readObject());
         } catch (Exception e) {
-            System.out.println("No se encontro el nodo: " + UID);
+            //System.out.println("No se encontro el nodo: " + UID);
             e.printStackTrace();
             System.exit(1);
             return null;
@@ -49,16 +58,16 @@ public class Rtree {
     //Devuelve un string con todos los ids que matchearon
     public static String search(Rectangle s) {
 
-        Queue<Long> nodesQueue = new LinkedList<>();
-        nodesQueue.add(treeId);
+        Stack<Long> nodesStack = new Stack<Long>();
+        nodesStack.add(treeId);
         StringBuilder sb = new StringBuilder();
 
-        while (!nodesQueue.isEmpty()) {
-            Node node = Rtree.loadNode(nodesQueue.remove());
+        while (!nodesStack.isEmpty()) {
+            Node node = Rtree.loadNode(nodesStack.pop());
 
             assert node != null;
 
-            if (node.registers.isEmpty()) {//es una hoja, solo compara con su rectangulo
+            if (node.type.equals("L")) {//es una hoja, solo compara con su rectangulo
                 if (node.MBR.overlaps(s)) {
                     sb.append(node.serialVersionUID);
                     sb.append(",");
@@ -67,7 +76,7 @@ public class Rtree {
                 for (Register reg : node.registers) {
                     Rectangle r = reg.rectangle;
                     if (r.overlaps(s)) {
-                        nodesQueue.add(reg.serialVersionUID);
+                        nodesStack.add(reg.serialVersionUID);
                     }
                 }
             }
@@ -77,13 +86,13 @@ public class Rtree {
 
 
     public static void insertRectangle (Rectangle s) {
-        Queue<Long> nodesQueue = new LinkedList<>(); //va guardando el reocrrido
-        nodesQueue.add(treeId);
+        Stack<Long> nodesStack = new Stack<>(); //va guardando el reocrrido
+        nodesStack.add(treeId);
         Node node = Rtree.loadNode(treeId);
 
         while (node != null) {
-            if (node.registers.isEmpty()) { //es hoja
-                node.addRegister(new Register(s, node.serialVersionUID), nodesQueue);
+            if (node.type.equals("L")) { //es hoja
+                node.addRegister(new Register(s, node.serialVersionUID), nodesStack);
                 node = null;
 
             } else { //se busca el el rectangulo que lo haria crecer menos
@@ -100,10 +109,11 @@ public class Rtree {
                         UID = reg.serialVersionUID;
                     }
                 }
-                nodesQueue.add(UID);
+                nodesStack.add(UID);
                 node = Rtree.loadNode(UID);
             }
         }
+
     }
 
 
@@ -114,7 +124,7 @@ public class Rtree {
         return (newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y);
     }
 
-    static void split(Node n, Queue<Long> nodes) {
+    static void split(Node n, Stack<Long> nodes) {
         splitter.split(n, nodes);
     }
 
@@ -134,15 +144,39 @@ public class Rtree {
     }
 
 
-    static void adjustTree(Queue<Long> nodes) {
+    static void adjustTree(Stack<Long> nodes) {
         while (!nodes.isEmpty()) {
-            Node node = Rtree.loadNode(nodes.remove());
+            Node node = Rtree.loadNode(nodes.pop());
             if (node != null) {
                 node.adjust();
+                Register newReg = new Register(node.MBR,node.serialVersionUID);
+                if (!nodes.isEmpty()) { //actualizar en padre
+                    Node father = Rtree.loadNode(nodes.peek());
+                    System.out.println("nodo padre" + father.serialVersionUID + " nodo hijo :" + newReg.serialVersionUID);
+                    father.updateRegister(newReg);
+                }
             }
         }
     }
+
+    public static void printTree() {
+        Stack<Long> nodesStack = new Stack<>(); //va guardando el reocrrido
+        nodesStack.add(treeId);
+        while (!nodesStack.isEmpty()) {
+            Node node = Rtree.loadNode(nodesStack.pop());
+            System.out.println("Nodo: " + node.serialVersionUID + " tipo: " + node.type + " tamaño rectangulo: " + node.MBR.getArea() + " numero de hijos: " + node.registers.size());
+            for (Register UID : node.registers) {
+                if(UID.serialVersionUID!=node.serialVersionUID){
+                    nodesStack.add(UID.serialVersionUID);
+                }
+
+            }
+        }
+
+    }
 }
+
+
 
 
 /*showdown sin simplificar

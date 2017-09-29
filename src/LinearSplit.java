@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
+
 
 public class LinearSplit extends AbstractSplitter {
 	
 	private ArrayList<Register> registers = new ArrayList<>();
 	private Register register1 = null;
     private Register register2 = null;
+    private String chosenAxis = null;
 	
 	
 	@Override
@@ -39,12 +40,14 @@ public class LinearSplit extends AbstractSplitter {
 					r1=reg1;
 					r2=reg2;
 					maxSeparation = separationY;
+					chosenAxis = "Y";
 				}
 				
 				if (separationX > maxSeparation) { 
 					r1=reg1;
 					r2=reg2;
 					maxSeparation = separationX;
+					chosenAxis = "X";
 				}
 				
 	        }
