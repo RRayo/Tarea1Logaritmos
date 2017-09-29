@@ -11,10 +11,10 @@ public class TestRTree {
 //          System.out.println(node1.MBR.maxPoint.x);
         System.out.println(Rtree.treeId);
         Rectangle rect = new Rectangle(new Point(0.0,0.0),new Point(1.0,0.0),new Point(1.0,0.0),new Point(1.0,1.0));
-        System.out.println(rect.getArea());
+        System.out.println(RectangleMethods.getArea(rect));
         Rtree.insertRectangle(rect);
         Node node1 = Rtree.loadNode(Rtree.treeId);
-        System.out.println(node1.MBR.getArea());
+        System.out.println(RectangleMethods.getArea(node1.MBR));
         Rtree.printTree();
     }
 }

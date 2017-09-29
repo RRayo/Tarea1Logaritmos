@@ -45,8 +45,8 @@ class Node implements Serializable {
             Point rLowerPoint = r.minPoint;
             Point rHigherPoint = r.maxPoint;
 
-            minPoint = minPoint.compare(rLowerPoint) ? minPoint : rLowerPoint;
-            maxPoint = !maxPoint.compare(rHigherPoint) ? maxPoint : rHigherPoint;
+            minPoint = PointMethods.compare(minPoint, rLowerPoint) ? minPoint : rLowerPoint;
+            maxPoint = !PointMethods.compare(maxPoint, rHigherPoint) ? maxPoint : rHigherPoint;
         }
 
         this.MBR = new Rectangle(minPoint, new Point(minPoint.x,maxPoint.y) , new Point(maxPoint.x,minPoint.y),maxPoint);

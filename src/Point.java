@@ -1,7 +1,11 @@
 import java.io.Serializable;
 
 public class Point implements Serializable{
-    double x;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	double x;
     double y;
 
     public Point(double x, double y){
@@ -14,10 +18,10 @@ public class Point implements Serializable{
         this.y = 0.0;
     }
 
-    /*
-     * Compara si el punto actual es menor o igual en todas sus coordenadas respecto al nuevo punto p.
-     */
-    public boolean compare(Point p){
-        return this.x <= p.x && this.y <= p.y;
-    }
+//    /*
+//     * Compara si el punto actual es menor o igual en todas sus coordenadas respecto al nuevo punto p.
+//     */
+//    public boolean compare(Point p){
+//        return this.x <= p.x && this.y <= p.y;
+//    }
 }

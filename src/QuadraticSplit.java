@@ -19,8 +19,8 @@ public class QuadraticSplit extends AbstractSplitter {
                 if(reg1 != reg2) {
                     Rectangle r1 = reg1.rectangle;
                     Rectangle r2 = reg2.rectangle;
-                    Double areaR1 = r1.getArea();
-                    Double areaR2 = r2.getArea();
+                    Double areaR1 = RectangleMethods.getArea(r1.maxPoint,r1.minPoint);
+                    Double areaR2 = RectangleMethods.getArea(r2.maxPoint,r2.minPoint);
                     Double newArea = Rtree.combinedArea(r1,r2) - areaR1 - areaR2;
                     if(mostWastefulArea > newArea){
                         mostWastefulArea = newArea;

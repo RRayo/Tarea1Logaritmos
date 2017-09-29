@@ -68,14 +68,14 @@ public class Rtree {
             assert node != null;
 
             if (node.type.equals("L")) {//es una hoja, solo compara con su rectangulo
-                if (node.MBR.overlaps(s)) {
+                if (RectangleMethods.overlaps(node.MBR, s)) {
                     sb.append(node.serialVersionUID);
                     sb.append(",");
                 }
             } else {
                 for (Register reg : node.registers) {
                     Rectangle r = reg.rectangle;
-                    if (r.overlaps(s)) {
+                    if (RectangleMethods.overlaps(r, s)) {
                         nodesStack.add(reg.serialVersionUID);
                     }
                 }
@@ -103,7 +103,7 @@ public class Rtree {
 
                 for (Register reg : node.registers) {
                     Rectangle r = reg.rectangle;
-                    areaEnlarge = r.areaEnlarge(s);
+                    areaEnlarge = RectangleMethods.areaEnlarge(r, s);
                     if (areaEnlarge < minAreaEnlarge) {
                         minAreaEnlarge = areaEnlarge;
                         UID = reg.serialVersionUID;
@@ -119,8 +119,8 @@ public class Rtree {
 
 
     static double combinedArea(Rectangle r, Rectangle s) {
-        Point newMinPoint = r.minPoint.compare(s.minPoint)? r.minPoint : s.minPoint;
-        Point newMaxPoint = !r.maxPoint.compare(s.maxPoint)? r.maxPoint : s.maxPoint;
+        Point newMinPoint = PointMethods.compare(r.minPoint, s.minPoint)? r.minPoint : s.minPoint;
+        Point newMaxPoint = !PointMethods.compare(r.maxPoint, s.maxPoint)? r.maxPoint : s.maxPoint;
         return (newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y);
     }
 
@@ -134,9 +134,9 @@ public class Rtree {
         Double areaGrow2 = combinedArea(n2.MBR,r);
 
         if (Math.abs(areaGrow1 - areaGrow2) < 0.001) {
-            if (Math.abs(n1.MBR.getArea() - n2.MBR.getArea()) < 0.001) {
+            if (Math.abs(RectangleMethods.getArea(n1.MBR) - RectangleMethods.getArea(n2.MBR)) < 0.001) {
                 return n1.registers.size() <= n2.registers.size();
-            } else return n1.MBR.getArea() < n2.MBR.getArea();
+            } else return RectangleMethods.getArea(n1.MBR) < RectangleMethods.getArea(n2.MBR);
         } else if (areaGrow1 < areaGrow2) {
             return true;
         }
@@ -164,7 +164,7 @@ public class Rtree {
         nodesStack.add(treeId);
         while (!nodesStack.isEmpty()) {
             Node node = Rtree.loadNode(nodesStack.pop());
-            System.out.println("Nodo: " + node.serialVersionUID + " tipo: " + node.type + " tamaño rectangulo: " + node.MBR.getArea() + " numero de hijos: " + node.registers.size());
+            System.out.println("Nodo: " + node.serialVersionUID + " tipo: " + node.type + " tamaño rectangulo: " + RectangleMethods.getArea(node.MBR) + " numero de hijos: " + node.registers.size());
             for (Register UID : node.registers) {
                 if(UID.serialVersionUID!=node.serialVersionUID){
                     nodesStack.add(UID.serialVersionUID);
