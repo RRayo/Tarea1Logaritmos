@@ -61,16 +61,16 @@ public class LinearSplit extends AbstractSplitter {
 	}
 
 	
-	private double rectangleSeparationY(Rectangle r1, Rectangle r2) {
-		Point maxLowerPoint = r1.minPoint.y > r2.minPoint.y ? r1.minPoint : r2.minPoint;
-		Point minHigherPoint = r1.maxPoint.y > r2.maxPoint.y ? r2.minPoint : r1.minPoint;
-		return minHigherPoint.y - maxLowerPoint.y;
+	public double rectangleSeparationY(Rectangle r1, Rectangle r2) {
+		double maxLowerPoint = r1.minPoint.y > r2.minPoint.y ? r1.minPoint.y : r2.minPoint.y;
+		double minHigherPoint = r1.maxPoint.y > r2.maxPoint.y ? r2.maxPoint.y : r1.maxPoint.y;
+		return minHigherPoint - maxLowerPoint;
 	}
 	
-	private double rectangleSeparationX(Rectangle r1, Rectangle r2) {
-		Point maxLowerPoint = r1.minPoint.x > r2.minPoint.x ? r1.minPoint : r2.minPoint;
-		Point minHigherPoint = r1.maxPoint.x > r2.maxPoint.x ? r2.minPoint : r1.minPoint;
-		return minHigherPoint.x - maxLowerPoint.x;
+	public double rectangleSeparationX(Rectangle r1, Rectangle r2) {
+		double maxLowerPoint = r1.minPoint.x > r2.minPoint.x ? r1.minPoint.x : r2.minPoint.x;
+		double minHigherPoint = r1.maxPoint.x > r2.maxPoint.x ? r2.maxPoint.x : r1.maxPoint.x;
+		return minHigherPoint - maxLowerPoint;
 	}
 
 
