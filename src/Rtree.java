@@ -14,7 +14,7 @@ public class Rtree {
     static long m = 2L;
     public static String path  = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
 
-    private static ISplitter splitter;
+    public static ISplitter splitter;
 
     //TODO tamaño 0
 
@@ -152,7 +152,7 @@ public class Rtree {
                 Register newReg = new Register(node.MBR,node.serialVersionUID);
                 if (!nodes.isEmpty()) { //actualizar en padre
                     Node father = Rtree.loadNode(nodes.peek());
-                    System.out.println("nodo padre" + father.serialVersionUID + " nodo hijo :" + newReg.serialVersionUID);
+                    //System.out.println("nodo padre" + father.serialVersionUID + " nodo hijo :" + newReg.serialVersionUID);
                     NodeMethods.updateRegister(father, newReg);
                 }
             }

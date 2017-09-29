@@ -3,15 +3,12 @@ import java.util.LinkedList;
 
 
 public class LinearSplit extends AbstractSplitter {
-	
-	private ArrayList<Register> registers = new ArrayList<>();
-	private Register register1 = null;
-    private Register register2 = null;
+
     private String chosenAxis = null;
-	
-	
+
+
 	@Override
-	public void pickSeeds(Node n) {
+	public RegisterTuple pickSeeds(Node n, ArrayList<Register> registers) {
 		double maxLowerPointX = Double.NEGATIVE_INFINITY;
 		double maxLowerPointY = Double.NEGATIVE_INFINITY;
 		double minHigherPointX = Double.POSITIVE_INFINITY;
@@ -31,19 +28,19 @@ public class LinearSplit extends AbstractSplitter {
 		Register r1 = null;
         Register r2 = null;
 		double maxSeparation = 0;
-		for (Register reg1 : this.registers) {
-			for (Register reg2 : this.registers) {
+		for (Register reg1 : registers) {
+			for (Register reg2 : registers) {
 				double separationY = rectangleSeparationY(reg1.rectangle, reg2.rectangle)/maxSeparationSetY;
 				double separationX = rectangleSeparationX(reg1.rectangle, reg2.rectangle)/maxSeparationSetX;
 				
-				if (separationY > maxSeparation) { 
-					r1=reg1;
+				if (separationY > maxSeparation) {
+                    r1=reg1;
 					r2=reg2;
 					maxSeparation = separationY;
 					chosenAxis = "Y";
 				}
 				
-				if (separationX > maxSeparation) { 
+				if (separationX > maxSeparation) {
 					r1=reg1;
 					r2=reg2;
 					maxSeparation = separationX;
@@ -52,17 +49,14 @@ public class LinearSplit extends AbstractSplitter {
 				
 	        }
         }
-		this.register1 = r1;
-		this.register2 = r2;
-		
-		this.registers.remove(r1);
-		this.registers.remove(r2);
+
+        return new RegisterTuple(r1,r2);
 	}
 
 	@Override
-	public Register pickNext(Node n, Node nn) {
-		Register reg = this.registers.get(0);
-		this.registers.remove(0);
+	public Register pickNext(Node n, Node nn, ArrayList<Register> registers) {
+		Register reg = registers.get(0);
+		registers.remove(0);
 		return reg;
 	}
 

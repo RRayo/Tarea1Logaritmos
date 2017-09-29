@@ -22,7 +22,7 @@ public class RectangleMethods {
     }
     
     public static double getArea(Rectangle r) {
-        return (r.maxPoint.x - r.minPoint.x) * (r.maxPoint.y - r.minPoint.y);
+        return Math.abs((r.maxPoint.x - r.minPoint.x) * (r.maxPoint.y - r.minPoint.y));
     }
 
     public static boolean overlaps (Rectangle r1, Rectangle r2) {
@@ -35,6 +35,10 @@ public class RectangleMethods {
         Point newMinPoint = PointMethods.compare(r1.minPoint, r2.minPoint)? r1.minPoint : r2.minPoint;
         Point newMaxPoint = !PointMethods.compare(r1.maxPoint, r2.maxPoint)? r1.maxPoint : r2.maxPoint;
         double newArea = (newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y);
-        return newArea - area;
+	    if (area == 0.0) {
+	        return area;
+        } else {
+            return newArea - area;
+        }
     }
 }

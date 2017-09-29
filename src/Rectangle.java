@@ -18,6 +18,11 @@ public class Rectangle implements Serializable {
         this.maxPoint = RectangleMethods.higherPoint(points);
     }
 
+    public Rectangle(Point minPoint, Point maxPoint) {
+        this.minPoint = minPoint;
+        this.maxPoint = maxPoint;
+    }
+
 //    public Point lowerPoint(ArrayList<Point> points) {
 //        Point minPoint = new Point(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 //        for (Point p : points) {

@@ -1,40 +1,24 @@
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RtreeTest {
-    @org.junit.jupiter.api.Test
-    void newRoot() {
-    }
+import org.junit.jupiter.api.Test;
 
-    @org.junit.jupiter.api.Test
-    void loadNode() {
-    }
+public class RtreeTest {
 
-    @org.junit.jupiter.api.Test
-    void search() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void insertRectangle() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void combinedArea() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void split() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void showdown() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void adjustTree() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void printTree() {
+    @Test
+    public void RtreeCreationAndInsert() {
+        Rtree rtree1 = new Rtree("/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/");
+        Node l = new Node("L");
+        Node r = new Node("L");
+        NodeMethods.saveNode(l);
+        NodeMethods.saveNode(r);
+        Rtree.newRoot(l,r);
+        Rectangle rect = TestMethods.generateRectangle();
+        Rtree.insertRectangle(rect);
+        Node node1 = Rtree.loadNode(Rtree.treeId);
+        // assert statements
+        assertEquals(Rtree.combinedArea(node1.MBR,rect), RectangleMethods.getArea(node1.MBR), 0.001, "Expanded area is not equal");
+        assertEquals(1,TestMethods.treeHeigth(), "Tree should have height 1 not" +TestMethods.treeHeigth() );
+        //Rtree.printTree();
     }
 
 }

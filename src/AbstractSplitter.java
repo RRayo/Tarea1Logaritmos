@@ -4,20 +4,21 @@ import java.util.Stack;
 
 public abstract class AbstractSplitter implements ISplitter{
 
-    private ArrayList<Register> registers = new ArrayList<>();
-    private Register register1 = null;
-    private Register register2 = null;
-
     @Override
     public void split(Node n, Stack<Long> nodes) {
-        this.registers =  new ArrayList<>(n.registers);
+        //System.out.println("-------------------------------------------------------------------------------------------------------------------->Se comenzo split");
+        ArrayList<Register> registers = new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
-        this.pickSeeds(n);
+
+        RegisterTuple regTuple = this.pickSeeds(n, registers);
+
+        registers.remove(regTuple.reg1);
+        registers.remove(regTuple.reg2);
 
         Node nn = new Node(n.type);
 
-        NodeMethods.addRegister(n, this.register1, new Stack<>());
-        NodeMethods.addRegister(nn, this.register2, new Stack<>());
+        NodeMethods.addRegister(n, regTuple.reg1, new Stack<>());
+        NodeMethods.addRegister(nn, regTuple.reg2, new Stack<>());
 
         /*if (n.type.equals("R") ){ //raiz hizo split
             n.type = "N";
@@ -32,7 +33,7 @@ public abstract class AbstractSplitter implements ISplitter{
 
 
         while (!registers.isEmpty() || n.registers.size() >= (Rtree.M-Rtree.m+1) || nn.registers.size() >= (Rtree.M-Rtree.m+1)) { // o grupo se lleno
-            Register chosenRegister = pickNext(n, nn);
+            Register chosenRegister = pickNext(n, nn, registers);
             Rectangle r = chosenRegister.rectangle;
             if (Rtree.showdown(n,nn,r)) {
                 NodeMethods.addRegister(n, chosenRegister,new Stack<>());
@@ -43,10 +44,23 @@ public abstract class AbstractSplitter implements ISplitter{
 
         if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
+
+                /*if(reg == null){
+                    System.out.println("----------------------------------------REGISTRO NULO-------------------------");
+                    System.exit(-1);
+                }*/
+
                 NodeMethods.addRegister(n, reg,new Stack<>());
             }
         } else if (nn.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
+
+
+                /*if(reg == null){
+                    System.out.println("----------------------------------------REGISTRO NULO-------------------------");
+                    System.exit(-1);
+                }*/
+
                 NodeMethods.addRegister(nn, reg,new Stack<>());
             }
         }
@@ -67,5 +81,6 @@ public abstract class AbstractSplitter implements ISplitter{
                 System.out.println("Nodes vacio");
             }
         }
+        //System.out.println("-------------------------------------------------------------------------------------------------------------------->Se realizo split exitosamente");
     }
 }

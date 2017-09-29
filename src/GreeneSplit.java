@@ -2,16 +2,14 @@ import java.util.*;
 
 public class GreeneSplit extends LinearSplit {
 
-    private ArrayList<Register> registers = new ArrayList<>();
-    private Register register1 = null;
-    private Register register2 = null;
+
     private String chosenAxis;
 
     @Override
     public void split(Node n, Stack<Long> nodes) {
-        this.registers =  new ArrayList<>(n.registers);
+        ArrayList<Register> registers =  new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
-        this.pickSeeds(n);
+        RegisterTuple registerTuple = pickSeeds(n, registers);
         Node nn = new Node(n.type);
 
 
@@ -20,7 +18,7 @@ public class GreeneSplit extends LinearSplit {
         int size = registers.size();
 
         while (!registers.isEmpty()) {
-            Register chosenRegister = pickNext(n, nn);
+            Register chosenRegister = pickNext(n, nn, registers);
             Rectangle r = chosenRegister.rectangle;
             if (size > ((Rtree.M)/2 + 2)) {
                 NodeMethods.addRegister(n, chosenRegister,new Stack<>());
