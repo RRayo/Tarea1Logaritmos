@@ -11,7 +11,7 @@ public class Rtree {
     static String DIR;
     static long treeId;
     static long M = 3L;
-    static long m = 2L;
+    static long m = 1L;
     public static String path  = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
 
     public static ISplitter splitter;
@@ -184,11 +184,9 @@ public class Rtree {
 
 
 /*showdown sin simplificar
-
     static boolean showdown(Node n1, Node n2, Rectangle r) {
         Double areaGrow1 = combinedArea(n1.MBR,r);
         Double areaGrow2 = combinedArea(n2.MBR,r);
-
         if (Math.abs(areaGrow1 - areaGrow2) < 0.001) {
             if (Math.abs(n1.MBR.getArea() - n2.MBR.getArea()) < 0.001) {
                 if (n1.registers.size() <= n2.registers.size()){
