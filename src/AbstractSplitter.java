@@ -34,12 +34,10 @@ public abstract class AbstractSplitter implements ISplitter{
         /*if (n.type.equals("R") ){ //raiz hizo split
             n.type = "N";
             nn.type = "N";
-
             //se guarda n y nn y se añade al padre
             n.saveNode();
             nn.saveNode();
             Rtree.newRoot(n,nn);
-
         } */
 
 
