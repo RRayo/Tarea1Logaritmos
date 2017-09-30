@@ -10,8 +10,8 @@ public class Rtree {
     public static SerialGenerator sg = new SerialGenerator();
     static String DIR;
     static long treeId;
-    static long M = 100L;
-    static long m = 2L;
+    static long M = 3L;
+    static long m = 1L;
     public static String path  = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
 
     public static ISplitter splitter;
