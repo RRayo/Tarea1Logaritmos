@@ -29,8 +29,8 @@ public class TestRTree {
         //Rtree.insertRectangle(TestMethods.generateRectangle());
         //
         //
-        TestMethods.insert100();
-        TestMethods.insert100();
+        TestMethods.insertN(3);
+        TestMethods.insertN(3);
         Rtree.printTree();
     }
 }

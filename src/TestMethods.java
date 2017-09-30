@@ -17,8 +17,8 @@ public class TestMethods {
         return new Point(axisPoint.x + random.nextDouble(0, 100), axisPoint.y + random.nextDouble(0, 100));
     }
 
-    public static void insert100 () {
-        for (int i = 0; i < 100; i++) {
+    public static void insertN (long n) {
+        for (int i = 0; i < n; i++) {
             Rtree.insertRectangle(generateRectangle());
         }
     }
