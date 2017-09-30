@@ -6,9 +6,18 @@ public abstract class AbstractSplitter implements ISplitter{
 
     @Override
     public void split(Node n, Stack<Long> nodes) {
+
+        nodes.pop();
+
+
         //System.out.println("-------------------------------------------------------------------------------------------------------------------->Se comenzo split");
         ArrayList<Register> registers = new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
+
+
+
+
+
 
         RegisterTuple regTuple = this.pickSeeds(n, registers);
 
@@ -19,6 +28,8 @@ public abstract class AbstractSplitter implements ISplitter{
 
         NodeMethods.addRegister(n, regTuple.reg1, new Stack<>());
         NodeMethods.addRegister(nn, regTuple.reg2, new Stack<>());
+
+        //System.out.println("AREA:" + RectangleMethods.getArea(nn.MBR) + "//" + RectangleMethods.getArea(regTuple.reg2.rectangle));
 
         /*if (n.type.equals("R") ){ //raiz hizo split
             n.type = "N";
@@ -33,6 +44,13 @@ public abstract class AbstractSplitter implements ISplitter{
 
 
         while (!registers.isEmpty() || n.registers.size() >= (Rtree.M-Rtree.m+1) || nn.registers.size() >= (Rtree.M-Rtree.m+1)) { // o grupo se lleno
+            //System.out.println(registers.size());
+
+
+            if(registers.size()==0) {
+                //TODO aca register tiene valor 0???
+                break;
+            }
             Register chosenRegister = pickNext(n, nn, registers);
             Rectangle r = chosenRegister.rectangle;
             if (Rtree.showdown(n,nn,r)) {
@@ -75,12 +93,13 @@ public abstract class AbstractSplitter implements ISplitter{
             Rtree.newRoot(n,nn);
         } else { // se añade registro al padre
             try {
+                //System.out.println(nodes.size());
                 NodeMethods.addRegister( Rtree.loadNode(nodes.pop()), new Register(nn.MBR, nn.serialVersionUID), nodes);
                 //Rtree.loadNode(nodes.pop()).addRegister(new Register(nn.MBR, nn.serialVersionUID), nodes);
             } catch (NullPointerException e) {
                 System.out.println("Nodes vacio");
             }
         }
-        //System.out.println("-------------------------------------------------------------------------------------------------------------------->Se realizo split exitosamente");
+        System.out.println("-------------------------------------------------------------------------------------------------------------------->Se realizo split exitosamente");
     }
 }

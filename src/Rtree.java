@@ -165,11 +165,15 @@ public class Rtree {
         while (!nodesStack.isEmpty()) {
             Node node = Rtree.loadNode(nodesStack.pop());
             System.out.println("Nodo: " + node.serialVersionUID + " tipo: " + node.type + " tamaño rectangulo: " + RectangleMethods.getArea(node.MBR) + " numero de hijos: " + node.registers.size());
-            for (Register UID : node.registers) {
-                if(UID.serialVersionUID!=node.serialVersionUID){
-                    nodesStack.add(UID.serialVersionUID);
-                }
 
+            if (!node.type.equals("L")){
+                for (Register UID : node.registers) {
+                    if(UID.serialVersionUID!=node.serialVersionUID){
+                        //System.out.println("node: " + UID.serialVersionUID);
+                        nodesStack.add(UID.serialVersionUID);
+                    }
+
+                }
             }
         }
 

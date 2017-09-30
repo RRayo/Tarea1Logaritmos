@@ -19,7 +19,7 @@ public class NodeMethods {
      */
     public static void adjust(Node node) {
 
-        System.out.println("Rectangulo: " + node.serialVersionUID + " area: " + RectangleMethods.getArea(node.MBR) +" registros: " + node.registers.size());
+        //System.out.println("Rectangulo: " + node.serialVersionUID + " area: " + RectangleMethods.getArea(node.MBR) +" registros: " + node.registers.size());
         if (((RectangleMethods.getArea(node.MBR) == 0.0) && node.registers.size() == 1) || ((RectangleMethods.getArea(node.MBR) == 0.0) && node.type.equals("R"))) {
             node.MBR = node.registers.get(0).rectangle;
             //System.out.println("NUeva area : " + RectangleMethods.getArea(node.MBR));
@@ -32,7 +32,7 @@ public class NodeMethods {
                 if (reg == null){
                     continue;
                 }
-                System.out.println("    -registro: " + reg.serialVersionUID);
+                //System.out.println("    -registro: " + reg.serialVersionUID);
 
 
 
@@ -107,6 +107,7 @@ public class NodeMethods {
 
 
         if(reg == null){
+            System.out.println("Rectangle " + RectangleMethods.getArea(reg.rectangle)+ " added to node " + node.serialVersionUID);
             System.out.println("/////////////////////////////////////////////////REGISTRO NULO\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
             System.exit(-1);
         }
