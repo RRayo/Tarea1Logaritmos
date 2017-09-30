@@ -1,7 +1,11 @@
+import java.util.ArrayList;
+
 public class TestRTree {
     public static void main(String[] args) {
         //System.out.println(500000*500000);
-        Rtree rtree1 = new Rtree("/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/");
+    	String pathAle = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
+    	String pathRayo = "C:/Users/Rayo1115/Desktop/T1LogTemp/";
+        Rtree rtree1 = new Rtree(pathRayo);
         Node l = new Node("L");
         Node r = new Node("L");
         NodeMethods.saveNode(l);
@@ -29,8 +33,23 @@ public class TestRTree {
         //Rtree.insertRectangle(TestMethods.generateRectangle());
         //
         //
-        TestMethods.insert100();
-        TestMethods.insert100();
+        Point[] highPoints1 = {new Point(1,1), new Point(2,1), new Point(3,1), new Point(4,1)}; // alineados en x
+        Point[] lowPoints1 = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(3,0)};
+        
+        Point[] highPoints2 = {new Point(1,1), new Point(1,0), new Point(1,-1), new Point(1,-2)}; // alineados en y
+        Point[] lowPoints2 = {new Point(0,0), new Point(0,-1), new Point(0,-2), new Point(0,-3)};
+        
+        Point[] highPoints3 = {new Point(1,1), new Point(2,0), new Point(3,-1), new Point(4,-2)}; // escalera descendiente
+        Point[] lowPoints3 = {new Point(0,0), new Point(1,-1), new Point(2,-2), new Point(3,-3)};
+        
+        Point[] highPoints4 = {new Point(1,1), new Point(2,1), new Point(3,1), new Point(1,0), new Point(2,0), new Point(3,0)}; // 2x3
+        Point[] lowPoints4 = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(0,-1), new Point(1,-1), new Point(2,-1)};
+        
+//        Point[] highPoints2 = {new Point(,), new Point(,), new Point(,), new Point(,)};
+//        Point[] lowPoints2 = {new Point(,), new Point(,), new Point(,), new Point(,)};
+        
+        TestMethods.insertRectangles(TestMethods.crearRectangulos(highPoints1, lowPoints1));
+        //TestMethods.insert100();
         Rtree.printTree();
     }
 }

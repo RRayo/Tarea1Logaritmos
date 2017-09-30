@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -20,6 +22,20 @@ public class TestMethods {
     public static void insert100 () {
         for (int i = 0; i < 100; i++) {
             Rtree.insertRectangle(generateRectangle());
+        }
+    }
+    
+    public static List<Rectangle> crearRectangulos (Point[] highPoints, Point[] lowPoints) {
+    	List<Rectangle> r = new ArrayList<Rectangle>();
+    	for(int i = 0; i<(Math.min(highPoints.length, lowPoints.length)); i++){
+    		r.add(new Rectangle(lowPoints[i], highPoints[i]));
+    	}
+		return r;
+    }
+    
+    public static void insertRectangles (List<Rectangle> rectangles) {
+        for (Rectangle r : rectangles) {
+            Rtree.insertRectangle(r);
         }
     }
 

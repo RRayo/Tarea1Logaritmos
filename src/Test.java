@@ -39,7 +39,7 @@ public class Test {
 		LinearSplit ls = new LinearSplit();
 		System.out.println("R1 points: (max, min)  (" + r1.maxPoint.x + ", " + r1.maxPoint.y + ") , (" + r1.minPoint.x + ", " + r1.minPoint.y + ")");
 		System.out.println("R3 points: (max, min)  (" + r3.maxPoint.x + ", " + r3.maxPoint.y + ") , (" + r3.minPoint.x + ", " + r3.minPoint.y + ")");
-		System.out.println("rectangleSeparationX R1 y R3: " + ls.rectangleSeparationX(r1, r3));
+		//System.out.println("rectangleSeparationX R1 y R3: " + ls.rectangleSeparationX(r1, r3));
 		
 	}
 
