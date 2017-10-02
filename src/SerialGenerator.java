@@ -18,11 +18,11 @@ public class SerialGenerator {
 
     /** Return the next available id number. */
     public static long nextUID() {
+    	ObjectInputStream in = null;
         try {
             long result;
             if (FILE.exists()) {
-                ObjectInputStream in
-                        = new ObjectInputStream(new FileInputStream(FILE));
+                in = new ObjectInputStream(new FileInputStream(FILE));
                 result = in.readLong();
             } else {
                 result = 0L;
@@ -36,6 +36,14 @@ public class SerialGenerator {
             e.printStackTrace();
             System.exit(1);
             return 0;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -1,14 +1,13 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 
 public class LinearSplit extends AbstractSplitter {
 
-    private String chosenAxis = null;
+    protected String chosenAxis = null;
 
 
 	@Override
-	public RegisterTuple pickSeeds(Node n, ArrayList<Register> registers) {
+	public RegisterTuple pickSeeds(ArrayList<Register> registers) {
 		double maxLowerPointX = Double.NEGATIVE_INFINITY;
 		double maxLowerPointY = Double.NEGATIVE_INFINITY;
 		double minHigherPointX = Double.POSITIVE_INFINITY;
@@ -17,8 +16,6 @@ public class LinearSplit extends AbstractSplitter {
 
 		// calcula separacion maxima del set
 		for (Register reg : registers) {
-			//System.out.println("(" + reg.rectangle.minPoint.x + "," + reg.rectangle.minPoint.y + ")");
-			//System.out.println("(" + reg.rectangle.maxPoint.x + "," + reg.rectangle.maxPoint.y + ")");
 			maxLowerPointX = reg.rectangle.minPoint.x > maxLowerPointX ? reg.rectangle.minPoint.x : maxLowerPointX;
 			maxLowerPointY = reg.rectangle.minPoint.y > maxLowerPointY ? reg.rectangle.minPoint.y : maxLowerPointY;
 			minHigherPointX = reg.rectangle.maxPoint.x < minHigherPointX ? reg.rectangle.maxPoint.x : minHigherPointX;
@@ -37,11 +34,6 @@ public class LinearSplit extends AbstractSplitter {
 			for (Register reg2 : registers) {
 				double separationY = rectangleSeparationY(reg1.rectangle, reg2.rectangle)/maxSeparationSetY;
 				double separationX = rectangleSeparationX(reg1.rectangle, reg2.rectangle)/maxSeparationSetX;
-
-				//System.out.println(separationY + " compared to " + maxSeparation);
-
-				//System.out.println(separationX + " compared to " + maxSeparation);
-
 
 				if (separationY > maxSeparation) {
                     r1=reg1;
@@ -70,13 +62,24 @@ public class LinearSplit extends AbstractSplitter {
 		return reg;
 	}
 
-	
+	/**
+	 * Se calcula la separacion en el eje Y de 2 rectangulos.
+	 * @param r1 Rectangulo 1.
+	 * @param r2 Rectangulo 2.
+	 * @return Separacion en el eje Y.
+	 */
 	private double rectangleSeparationY(Rectangle r1, Rectangle r2) {
 		Point maxLowerPoint = r1.minPoint.y > r2.minPoint.y ? r1.minPoint : r2.minPoint;
 		Point minHigherPoint = r1.maxPoint.y > r2.maxPoint.y ? r2.minPoint : r1.minPoint;
 		return Math.abs(minHigherPoint.y - maxLowerPoint.y);
 	}
 	
+	/**
+	 * Se calcula la separacion en el eje X de 2 rectangulos.
+	 * @param r1 Rectangulo 1.
+	 * @param r2 Rectangulo 2.
+	 * @return Separacion en el eje X.
+	 */
 	private double rectangleSeparationX(Rectangle r1, Rectangle r2) {
 		Point maxLowerPoint = r1.minPoint.x > r2.minPoint.x ? r1.minPoint : r2.minPoint;
 		Point minHigherPoint = r1.maxPoint.x > r2.maxPoint.x ? r2.minPoint : r1.minPoint;

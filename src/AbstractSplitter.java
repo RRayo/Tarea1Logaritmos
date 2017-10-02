@@ -1,8 +1,17 @@
 import java.util.ArrayList;
 import java.util.Stack;
 
+/**
+ * Spliter abstracto que implementa el metodo split para las distintas heuristicas.
+ *
+ */
 public abstract class AbstractSplitter implements ISplitter{
 
+	/**
+	 * Metodo para realizar split en un nodo.
+	 * @param n Nodo donde se realizara split.
+	 * @param nodes
+	 */
     @Override
     public void split(Node n, Stack<Long> nodes) {
 
@@ -24,13 +33,18 @@ public abstract class AbstractSplitter implements ISplitter{
 
         //System.out.println("Split de nodo: " + n.serialVersionUID);
 
-        while ( (registers.size() > 0) || (n.registers.size() >= (Rtree.M-Rtree.m+1)) || (nn.registers.size() >= (Rtree.M-Rtree.m+1))) { // o grupo se lleno
+        while (!registers.isEmpty() // si la lista esta vacia
+                // si se sobrepasa el limite de algun nodo para que el otro quede con al menos m registros
+                && n.registers.size() < (Rtree.M-Rtree.m+1)
+                && nn.registers.size() < (Rtree.M-Rtree.m+1))  {
 
          if(registers.size()==0) {
              break;
             }
             Register chosenRegister = pickNext(n, nn, registers);
             Rectangle r = chosenRegister.rectangle;
+
+            // se selecciona el nodo donde se colocara
 
             Stack<Long> insertNodes = stackClone(nodes);
 
@@ -43,6 +57,7 @@ public abstract class AbstractSplitter implements ISplitter{
             }
         }
 
+        // si agun nodo se lleno con M-m+1 registros, los que quedan iran al otro
         if (n.registers.size() >= (Rtree.M-Rtree.m+1)) {
             for (Register reg : registers) {
                 NodeMethods.addRegister(n, reg, s);
@@ -66,10 +81,8 @@ public abstract class AbstractSplitter implements ISplitter{
             NodeMethods.saveNode(n);
             NodeMethods.saveNode(nn);
             Rtree.newRoot(n,nn);
-        } else { // se añade registro al padre
+        } else { // se agrega registro al padre
             try {
-
-
                 nodes.pop();
 
                 Node aux = Rtree.loadNode(nodes.peek());
