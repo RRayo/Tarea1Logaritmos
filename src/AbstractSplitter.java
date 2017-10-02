@@ -17,7 +17,7 @@ public abstract class AbstractSplitter implements ISplitter{
 
         ArrayList<Register> registers = new ArrayList<>(n.registers);
         n.registers = new ArrayList<>();
-        RegisterTuple regTuple = this.pickSeeds(n, registers);
+        RegisterTuple regTuple = this.pickSeeds(registers);
         registers.remove(regTuple.reg1);
         registers.remove(regTuple.reg2);
         Node nn = new Node(n.type);
