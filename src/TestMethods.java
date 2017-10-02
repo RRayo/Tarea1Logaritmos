@@ -4,24 +4,30 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TestMethods {
-    public static Rectangle generateRectangle () {
+    static Rectangle generateRectangle() {
         Point axisPoint = generateAxisPoint();
         return new Rectangle(axisPoint, generatePoint(axisPoint));
     }
 
-    public static Point generateAxisPoint () {
+    private static Point generateAxisPoint() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         return new Point(random.nextDouble(0, 500000), random.nextDouble(0, 500000));
     }
 
-    public static Point generatePoint (Point axisPoint) {
+    private static Point generatePoint(Point axisPoint) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         return new Point(axisPoint.x + random.nextDouble(0, 100), axisPoint.y + random.nextDouble(0, 100));
     }
 
-    public static void insertN (long n) {
+    static void insertN(long n) {
         for (int i = 0; i < n; i++) {
             Rtree.insertRectangle(generateRectangle());
+        }
+    }
+
+    public static void searchN(long n) {
+        for (int i = 0; i < n; i++) {
+            Rtree.search(generateRectangle());
         }
     }
     
@@ -39,9 +45,10 @@ public class TestMethods {
         }
     }
 
-    public static int treeHeigth () {
+    static int treeHeigth() {
         Node node = Rtree.loadNode(Rtree.treeId);
         int height = 0;
+        assert node != null;
         while (!node.type.equals("L")) {
             height++;
             node = Rtree.loadNode(node.registers.get(0).serialVersionUID);

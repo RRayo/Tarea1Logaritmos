@@ -5,12 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class ExperimentationMethods {
-    public static StringBuilder filesData (String path, StringBuilder sb) {
+class ExperimentationMethods {
+    private static StringBuilder filesData(String path, StringBuilder sb) {
         ArrayList<Double> results = new ArrayList<>();
         File dir = new File(path);
         File[] directoryListing = dir.listFiles();
@@ -37,7 +36,7 @@ public class ExperimentationMethods {
         return sb;
     }
 
-    public static void resultsFile (String name, String path, StringBuilder sb) {
+    private static void resultsFile(String name, String path, StringBuilder sb) {
         List<String> lines = Collections.singletonList(sb.toString());
         Path file = Paths.get(path + name);
         try {
@@ -48,7 +47,7 @@ public class ExperimentationMethods {
         }
     }
 
-    public static void experiment (long N, String path, String name) {
+    static void insertExperiment(long N, String path, String name) {
 
         long tStart = System.currentTimeMillis();
 

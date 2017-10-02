@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Stack;
 
 public abstract class AbstractSplitter implements ISplitter{
@@ -83,7 +82,7 @@ public abstract class AbstractSplitter implements ISplitter{
         //System.out.println("-------------------------------------------------------------------------------------------------------------------->Se realizo split exitosamente");
     }
 
-    public static Stack<Long> stackClone (Stack<Long> stack) {
+    private static Stack<Long> stackClone(Stack<Long> stack) {
         if (stack.isEmpty()) {
             return stack;
         } else {
