@@ -79,4 +79,16 @@ public class RectangleMethods {
         double newArea = getArea(newMaxPoint, newMinPoint);
         return newArea - area;
     }
+    
+    /**
+     * Calcula el area del rectangulo que encierra a ambos rectangulos.
+     * @param r Rectangulo 1.
+     * @param s Rectangulo 2.
+     * @return Retorna el area del rectangulo que encierra a ambos rectangulos.
+     */
+    static double combinedArea(Rectangle r, Rectangle s) {
+        Point newMinPoint = PointMethods.compare(r.minPoint, s.minPoint)? r.minPoint : s.minPoint;
+        Point newMaxPoint = !PointMethods.compare(r.maxPoint, s.maxPoint)? r.maxPoint : s.maxPoint;
+        return Math.abs((newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y));
+    }
 }

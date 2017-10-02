@@ -90,7 +90,11 @@ public class Rtree {
     }
 
 
-    //Devuelve un string con todos los ids que matchearon
+    /**
+     * Busca en el Rtree todos los rectangulos que intersecten al rectangulo entregado.
+     * @param s Rectangulo que se busca en el arbol.
+     * @return String con todos los ids que matchearon.
+     */
     public static String search(Rectangle s) {
 
         Stack<Long> nodesStack = new Stack<Long>();
@@ -120,6 +124,10 @@ public class Rtree {
     }
 
 
+    /**
+     * Inserta un rectangulo en el Rtree bajando hasta posicionarse en una hoja.
+     * @param s Rectangulo por insertar al arbol.
+     */
     public static void insertRectangle (Rectangle s) {
         Stack<Long> nodesStack = new Stack<>(); //va guardando el reocrrido
         nodesStack.add(treeId);
@@ -155,21 +163,27 @@ public class Rtree {
     }
 
 
-
-    static double combinedArea(Rectangle r, Rectangle s) {
-        Point newMinPoint = PointMethods.compare(r.minPoint, s.minPoint)? r.minPoint : s.minPoint;
-        Point newMaxPoint = !PointMethods.compare(r.maxPoint, s.maxPoint)? r.maxPoint : s.maxPoint;
-        return (newMaxPoint.x - newMinPoint.x)*(newMaxPoint.y - newMinPoint.y);
-    }
-
+    /**
+     * Split de un nodo segun el splitter seleccionado.
+     * @param n Nodo donde se hara split.
+     * @param nodes Lista de nodos.
+     */
     static void split(Node n, Stack<Long> nodes) {
         splitter.split(n, nodes);
     }
 
 
+    /**
+     * Metodo para decidir en que nodo se guardara un rectangulo.
+     * Considera los casos en que haya empates y los resuelve.
+     * @param n1 Nodo 1.
+     * @param n2 Nodo 2.
+     * @param r Rectangulo que se almacenara en uno de los nodos.
+     * @return Retorna true si el rectangulo quedara en el Nodo 1.
+     */
     static boolean showdown(Node n1, Node n2, Rectangle r) {
-        Double areaGrow1 = combinedArea(n1.MBR,r);
-        Double areaGrow2 = combinedArea(n2.MBR,r);
+        Double areaGrow1 = RectangleMethods.combinedArea(n1.MBR,r);
+        Double areaGrow2 = RectangleMethods.combinedArea(n2.MBR,r);
 
         if (Math.abs(areaGrow1 - areaGrow2) < 0.001) {
             if (Math.abs(RectangleMethods.getArea(n1.MBR) - RectangleMethods.getArea(n2.MBR)) < 0.001) {
@@ -182,6 +196,10 @@ public class Rtree {
     }
 
 
+    /**
+     * Reajusta los nodos en el Stack recalculando su MBR.
+     * @param nodes Stack con los nodos que fueron afectados al insertar un rectangulo en el arbol y necesitan recomputar su MBR.
+     */
     static void adjustTree(Stack<Long> nodes) {
         while (!nodes.isEmpty()) {
             Node node = Rtree.loadNode(nodes.pop());
@@ -197,6 +215,9 @@ public class Rtree {
         }
     }
 
+    /**
+     * Imprime el arbol actual.
+     */
     public static void printTree() {
         Stack<Long> nodesStack = new Stack<>(); //va guardando el reocrrido
         nodesStack.add(treeId);
