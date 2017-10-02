@@ -65,7 +65,6 @@ public class LinearSplit extends AbstractSplitter {
 
 	@Override
 	public Register pickNext(Node n, Node nn, ArrayList<Register> registers) {
-
 		Register reg = registers.get(0);
 		registers.remove(0);
 		return reg;

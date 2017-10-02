@@ -2,10 +2,13 @@ import java.util.ArrayList;
 
 public class TestRTree {
     public static void main(String[] args) {
+
+
         //System.out.println(500000*500000);
     	String pathAle = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
     	String pathRayo = "C:/Users/Rayo1115/Desktop/T1LogTemp/";
-        Rtree rtree1 = new Rtree(pathRayo);
+
+        Rtree rtree1 = new Rtree(pathAle);
         Node l = new Node("L");
         Node r = new Node("L");
         NodeMethods.saveNode(l);
@@ -33,6 +36,8 @@ public class TestRTree {
         //Rtree.insertRectangle(TestMethods.generateRectangle());
         //
         //
+
+        /*
         Point[] highPoints1 = {new Point(1,1), new Point(2,1), new Point(3,1), new Point(4,1)}; // alineados en x
         Point[] lowPoints1 = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(3,0)};
         
@@ -44,12 +49,17 @@ public class TestRTree {
         
         Point[] highPoints4 = {new Point(1,1), new Point(2,1), new Point(3,1), new Point(1,0), new Point(2,0), new Point(3,0)}; // 2x3
         Point[] lowPoints4 = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(0,-1), new Point(1,-1), new Point(2,-1)};
+
         
 //        Point[] highPoints2 = {new Point(,), new Point(,), new Point(,), new Point(,)};
 //        Point[] lowPoints2 = {new Point(,), new Point(,), new Point(,), new Point(,)};
         
         TestMethods.insertRectangles(TestMethods.crearRectangulos(highPoints1, lowPoints1));
-        //TestMethods.insert100();
+
+                */
+
+        System.out.println("Root node: " + Rtree.treeId);
+        TestMethods.insertN(24);
         Rtree.printTree();
     }
 }

@@ -30,6 +30,7 @@ public class RectangleMethods {
         //return (maxP.x < maxR.x + r.width) && (maxP.x + width > maxR.x) && (maxP.y < maxR.y + r.height) && (maxP.y + height > maxR.y);
     }
 
+
     public static double areaEnlarge (Rectangle r1, Rectangle r2) {
         double area = getArea(r1);
         Point newMinPoint = PointMethods.compare(r1.minPoint, r2.minPoint)? r1.minPoint : r2.minPoint;

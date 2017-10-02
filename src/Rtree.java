@@ -35,8 +35,17 @@ public class Rtree {
     public static void newRoot(Node l, Node r) {
         Node n = new Node("R");
         NodeMethods.saveNode(n);
-        NodeMethods.addRegister(n,new Register(l.MBR,l.serialVersionUID), new Stack<>());
-        NodeMethods.addRegister(n,new Register(r.MBR,r.serialVersionUID), new Stack<>());
+
+        Stack<Long> ls = new Stack<>();
+        ls.push(n.serialVersionUID);
+        ls.push(l.serialVersionUID);
+
+        Stack<Long> rs = new Stack<>();
+        rs.push(n.serialVersionUID);
+        rs.push(r.serialVersionUID);
+
+        NodeMethods.addRegister(n,new Register(l.MBR,l.serialVersionUID), ls);
+        NodeMethods.addRegister(n,new Register(r.MBR,r.serialVersionUID), rs);
         treeId = n.serialVersionUID;
         NodeMethods.saveNode(n);
     }
@@ -91,7 +100,9 @@ public class Rtree {
         Node node = Rtree.loadNode(treeId);
 
         while (node != null) {
+
             if (node.type.equals("L")) { //es hoja
+               //System.out.println("insert on node: " + node.serialVersionUID);
                 NodeMethods.addRegister(node, new Register(s, node.serialVersionUID), nodesStack);
                 node = null;
 
@@ -110,6 +121,7 @@ public class Rtree {
                     }
                 }
                 nodesStack.add(UID);
+                //System.out.println("Tamaño stack: " + nodesStack.size());
                 node = Rtree.loadNode(UID);
             }
         }

@@ -105,13 +105,17 @@ public class NodeMethods {
     public static void addRegister(Node node, Register reg, Stack<Long> nodes) {
         //System.out.println("Rectangle " + RectangleMethods.getArea(reg.rectangle)+ " added to node " + node.serialVersionUID);
 
+        //System.out.println("Rectangle " + RectangleMethods.getArea(reg.rectangle)+ " added to node " + node.serialVersionUID);
 
-        if(reg == null){
+        /*if(reg == null){
             System.out.println("Rectangle " + RectangleMethods.getArea(reg.rectangle)+ " added to node " + node.serialVersionUID);
             System.out.println("/////////////////////////////////////////////////REGISTRO NULO\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
             System.exit(-1);
-        }
+        }*/
+
+
         node.registers.add(reg);
+        adjust(node);
         saveNode(node);
         if (node.registers.size() > Rtree.M) {
             Rtree.split(node, nodes);
