@@ -1,11 +1,12 @@
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Stack;
 
 
+/**
+ * Estructura Nodo para R-Trees, guarda un MBR, resgistros con los hijos, su tipo (Leaf, Root o Node) y un serial.
+ *
+ */
+@SuppressWarnings("serial")
 class Node implements Serializable {
     long serialVersionUID;
     Rectangle MBR;
@@ -13,7 +14,10 @@ class Node implements Serializable {
     protected String type; // Leaf, Root or Node
 
 
-    //constructor nodo
+    /**
+     * Constructor para Nodo.
+     * @param type Tipo al que pertenece: Leaf, Root o Node.
+     */
     Node(String type) {
         this.MBR = new Rectangle();
         this.serialVersionUID = SerialGenerator.nextUID();

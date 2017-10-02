@@ -1,9 +1,11 @@
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Stack;
 
+/**
+ * Metodos para operar sobre Nodos.
+ */
 public class NodeMethods {
 
     //Para ajustar el rectangulo luego de agregar nuevos hijos se toma el punto mas bajo de todos y el mas alto de todos y se crea un nuevo
@@ -17,6 +19,11 @@ public class NodeMethods {
         *__________________*(maxX,minY)
         (minX,minY)
      */
+	
+	/**
+	 * Recalcula el MBR de un nodo recorriendo sus hijos y se queda con el rectangulo generado por los puntos mas ditantes.
+	 * @param node Nodo al que se le quiere reajustar su MBR.
+	 */
     public static void adjust(Node node) {
 
         //System.out.println("Rectangulo: " + node.serialVersionUID + " area: " + RectangleMethods.getArea(node.MBR) +" registros: " + node.registers.size());
@@ -73,7 +80,10 @@ public class NodeMethods {
     }
 
 
-    //Guarda el nodo en un archivo identificado por su UID
+    /**
+     * Guarda el nodo en un archivo identificado por su UID
+     * @param node Nodo que se desea guardar en disco.
+     */
     public static void saveNode(Node node) {
         try {
             String path = Rtree.path;
@@ -90,6 +100,11 @@ public class NodeMethods {
     }
 
 
+    /**
+     * Actualiza un registro de entre la lista de registros de un nodo si poseen la misma ID.
+     * @param node Nodo que posee la lista de registros por actualizar.
+     * @param newReg Registro que reemplazará a un hijo del Nodo si comparten la misma ID.
+     */
     public static void updateRegister(Node node, Register newReg) {
         //System.out.println("Nodo " + this.serialVersionUID + " numero de registros: " + this.registers.size());
         for (Register reg : node.registers) {
@@ -102,13 +117,20 @@ public class NodeMethods {
         saveNode(node);
     }
 
+    /**
+     * Agrega un registro a un Nodo.
+     * Si el nodo es nulo entrega un mensaje de error.
+     * Si se llena el nodo se hace split.
+     * @param node Nodo donde se agregara el registro.
+     * @param reg Registro que se agregara a la lista dentro del nodo.
+     * @param nodes
+     */
     public static void addRegister(Node node, Register reg, Stack<Long> nodes) {
         //System.out.println("Rectangle " + RectangleMethods.getArea(reg.rectangle)+ " added to node " + node.serialVersionUID);
 
 
         if(reg == null){
-            System.out.println("Rectangle " + RectangleMethods.getArea(reg.rectangle)+ " added to node " + node.serialVersionUID);
-            System.out.println("/////////////////////////////////////////////////REGISTRO NULO\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
+            System.err.println("/////////////////////////////////////////////////REGISTRO NULO\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\");
             System.exit(-1);
         }
         node.registers.add(reg);

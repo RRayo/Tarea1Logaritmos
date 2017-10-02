@@ -1,10 +1,13 @@
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.LinkedList;
 import java.util.Stack;
 
 import static java.lang.Double.MAX_VALUE;
 
+/**
+ * Estructura de arbol para almacenar rectangulos en 2 dimensiones.
+ */
 public class Rtree {
 
     public static SerialGenerator sg = new SerialGenerator();
@@ -18,6 +21,10 @@ public class Rtree {
 
     //TODO tamaño 0
 
+    /**
+     * Contructor para el Rtree.
+     * @param temp Directorio donde se guardaran las estructuras generadas.
+     */
     public Rtree(String temp){
         path = temp;
         /*Node n = new Node("R");
@@ -32,6 +39,11 @@ public class Rtree {
         n.saveNode();*/
     }
 
+    /**
+     * Genera una nueva raiz del arbol y sus hijos iniciales con .
+     * @param l Nodo izquierdo de la raiz.
+     * @param r Nodo derecho de la raiz.
+     */
     public static void newRoot(Node l, Node r) {
         Node n = new Node("R");
         NodeMethods.saveNode(n);
@@ -41,16 +53,30 @@ public class Rtree {
         NodeMethods.saveNode(n);
     }
 
+    /**
+     * Carga un Nodo desde un archivo.
+     * @param UID Codificacion del nodo que se cargara.
+     * @return Retorna el Nodo como objeto.
+     */
     static Node loadNode(long UID) {
         String nodeName = "node" + UID + ".ser";
+        ObjectInputStream in = null;
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(path + nodeName));
+            in = new ObjectInputStream(new FileInputStream(path + nodeName));
             return (Node) (in.readObject());
         } catch (Exception e) {
             //System.out.println("No se encontro el nodo: " + UID);
             e.printStackTrace();
             System.exit(1);
             return null;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
