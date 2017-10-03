@@ -1,6 +1,8 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 import static java.lang.Double.MAX_VALUE;
@@ -219,13 +221,13 @@ public class Rtree {
      * Imprime el arbol actual.
      */
     public static void printTree() {
-        Stack<Long> nodesStack = new Stack<>(); //va guardando el reocrrido
+        Stack<Long> nodesStack = new Stack<>(); //va guardando el recorrido
         nodesStack.add(treeId);
         while (!nodesStack.isEmpty()) {
             Node node = Rtree.loadNode(nodesStack.pop());
             System.out.println("Nodo: " + node.serialVersionUID + " tipo: " + node.type + " tamaño rectangulo: " + RectangleMethods.getArea(node.MBR) + " numero de hijos: " + node.registers.size());
 
-            if (!node.type.equals("L")){
+            if (!node.type.equals("L")){ // si no es una hoja agrega los registros al stack
                 for (Register UID : node.registers) {
                     if(UID.serialVersionUID!=node.serialVersionUID){
                         //System.out.println("node: " + UID.serialVersionUID);
@@ -236,6 +238,31 @@ public class Rtree {
             }
         }
 
+    }
+    
+    public static void printLevelOrder() {
+        Queue<Long> queue = new LinkedList<Long>();
+        queue.add(treeId);
+        while (!queue.isEmpty()) 
+        {
+ 
+            /* poll() removes the present head.
+            For more information on poll() visit 
+            http://www.tutorialspoint.com/java/util/linkedlist_poll.htm */
+            Node tempNode = Rtree.loadNode(queue.poll());
+            System.out.print(tempNode.serialVersionUID + " ");
+            
+            if (!tempNode.type.equals("L")){ // si no es una hoja agrega los registros al stack
+                for (Register UID : tempNode.registers) {
+                    if(UID.serialVersionUID!=tempNode.serialVersionUID){
+                        //System.out.println("node: " + UID.serialVersionUID);
+                    	queue.add(UID.serialVersionUID);
+                    }
+
+                }
+            }
+        }
+        
     }
 }
 

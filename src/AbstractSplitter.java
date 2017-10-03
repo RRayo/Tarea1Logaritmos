@@ -83,8 +83,10 @@ public abstract class AbstractSplitter implements ISplitter{
             Rtree.newRoot(n,nn);
         } else { // se agrega registro al padre
             try {
-                nodes.pop();
-
+            	if (nodes.size() >= 2 ) {
+            		nodes.pop();
+            	}
+               
                 Node aux = Rtree.loadNode(nodes.peek());
 
                 NodeMethods.addRegister( aux, new Register(nn.MBR, nn.serialVersionUID), nodes);

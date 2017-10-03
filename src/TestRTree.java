@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class TestRTree {
     public static void main(String[] args) {
@@ -8,7 +9,7 @@ public class TestRTree {
     	String pathAle = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
     	String pathRayo = "C:/Users/Rayo1115/Desktop/T1LogTemp/";
 
-        Rtree rtree1 = new Rtree(pathAle);
+        Rtree rtree1 = new Rtree(pathRayo);
         Node l = new Node("L");
         Node r = new Node("L");
         NodeMethods.saveNode(l);
@@ -50,6 +51,8 @@ public class TestRTree {
         Point[] highPoints4 = {new Point(1,1), new Point(2,1), new Point(3,1), new Point(1,0), new Point(2,0), new Point(3,0)}; // 2x3
         Point[] lowPoints4 = {new Point(0,0), new Point(1,0), new Point(2,0), new Point(0,-1), new Point(1,-1), new Point(2,-1)};
 
+        Point[] highPoints5 = {new Point(1,1), new Point(2,2), new Point(3,3), new Point(4,4)}; // unos dentro de los otros
+        Point[] lowPoints5 = {new Point(0,0), new Point(0,0), new Point(0,0), new Point(0,0)};
         
 //        Point[] highPoints2 = {new Point(,), new Point(,), new Point(,), new Point(,)};
 //        Point[] lowPoints2 = {new Point(,), new Point(,), new Point(,), new Point(,)};
@@ -57,9 +60,24 @@ public class TestRTree {
         TestMethods.insertRectangles(TestMethods.crearRectangulos(highPoints1, lowPoints1));
 
                 */
-
+        
+        Point[] highPoints5 = {new Point(2,2), new Point(3,3), new Point(4,4), new Point(5,5)}; // unos dentro de los otros
+        Point[] lowPoints5 = {new Point(1,1), new Point(1,1), new Point(1,1), new Point(1,1)};
+        
+        
         System.out.println("Root node: " + Rtree.treeId);
-        TestMethods.insertN(24);
+        List<Rectangle> r1 = TestMethods.crearRectangulos(highPoints5, lowPoints5);
+        System.out.println("Rectangulos: " + r1.toString() + " size: " + r1.size());
+        int a = 0;
+        for (Rectangle s : r1) {
+        	System.out.println("Rectangulo: " + (a++) + ", min (x,y) = (" + s.minPoint.x + "," + s.minPoint.y
+        			+ ") , max (x,y) = (" + s.maxPoint.x + "," + s.maxPoint.y + ")");
+        }
+        TestMethods.insertRectangles(r1);
+
+//        System.out.println("Root node: " + Rtree.treeId);
+//        TestMethods.insertN(24);
         Rtree.printTree();
+        Rtree.printLevelOrder();
     }
 }
