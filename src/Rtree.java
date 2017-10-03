@@ -107,6 +107,11 @@ public class Rtree {
             Node node = Rtree.loadNode(nodesStack.pop());
 
             assert node != null;
+            
+            double area = RectangleMethods.getArea(node.MBR);
+            if (area < 0.0001 && area > -0.0001) {
+            	continue;
+            }
 
             if (node.type.equals("L")) {//es una hoja, solo compara con su rectangulo
                 if (RectangleMethods.overlaps(node.MBR, s)) {

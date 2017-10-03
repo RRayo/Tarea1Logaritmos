@@ -80,6 +80,6 @@ public class TestRTree {
         Rtree.printTree();
         Rtree.printLevelOrder();
         System.out.println("Search r = (0,0)x(6,6):  " + Rtree.search(new Rectangle(new Point(0.1,0.1), new Point(6,6))));
-        System.out.println("Search r = (1,1)x(2,2):  " + Rtree.search(new Rectangle(new Point(5,5), new Point(6,6))));
+        System.out.println("Search r = (1,1)x(2,2):  " + Rtree.search(new Rectangle(new Point(0,0), new Point(6,6))));
     }
 }
