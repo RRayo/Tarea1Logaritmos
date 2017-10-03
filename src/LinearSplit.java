@@ -22,8 +22,8 @@ public class LinearSplit extends AbstractSplitter {
 			minHigherPointY = reg.rectangle.maxPoint.y < minHigherPointY ? reg.rectangle.maxPoint.y : minHigherPointY;
         }
 		
-		double maxSeparationSetX = maxLowerPointX - minHigherPointX;
-		double maxSeparationSetY = maxLowerPointY - minHigherPointY;
+		double maxSeparationSetX = Math.abs(maxLowerPointX - minHigherPointX);
+		double maxSeparationSetY = Math.abs(maxLowerPointY - minHigherPointY);
 		
 
 		Register r1 = null;
@@ -32,17 +32,20 @@ public class LinearSplit extends AbstractSplitter {
 		double maxSeparation = 0;
 		for (Register reg1 : registers) {
 			for (Register reg2 : registers) {
+				if (reg1.serialVersionUID == reg2.serialVersionUID) {
+					continue;
+				}
 				double separationY = rectangleSeparationY(reg1.rectangle, reg2.rectangle)/maxSeparationSetY;
 				double separationX = rectangleSeparationX(reg1.rectangle, reg2.rectangle)/maxSeparationSetX;
 
-				if (separationY > maxSeparation) {
+				if (separationY >= maxSeparation) {
                     r1=reg1;
 					r2=reg2;
 					maxSeparation = separationY;
 					chosenAxis = "Y";
 				}
 				
-				if (separationX > maxSeparation) {
+				if (separationX >= maxSeparation) {
 					r1=reg1;
 					r2=reg2;
 					maxSeparation = separationX;
