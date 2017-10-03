@@ -262,6 +262,7 @@ public class Rtree {
                 }
             }
         }
+        System.out.println(System.lineSeparator());
         
     }
 }

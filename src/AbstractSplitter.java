@@ -89,7 +89,9 @@ public abstract class AbstractSplitter implements ISplitter{
                
                 Node aux = Rtree.loadNode(nodes.peek());
 
+                NodeMethods.updateRegister(aux,new Register(n.MBR, n.serialVersionUID));
                 NodeMethods.addRegister( aux, new Register(nn.MBR, nn.serialVersionUID), nodes);
+                
             } catch (NullPointerException e) {
                 System.out.println("Nodes vacio");
             }
