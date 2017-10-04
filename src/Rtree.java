@@ -80,6 +80,7 @@ public class Rtree {
     }
 
 
+
     /**
      * Busca en el Rtree todos los rectangulos que intersecten al rectangulo entregado.
      * @param s Rectangulo que se busca en el arbol.
@@ -87,19 +88,17 @@ public class Rtree {
      */
     public static String search(Rectangle s) {
 
+        int diskAccess = 0;
+
         Stack<Long> nodesStack = new Stack<Long>();
         nodesStack.add(treeId);
         StringBuilder sb = new StringBuilder();
 
         while (!nodesStack.isEmpty()) {
             Node node = Rtree.loadNode(nodesStack.pop());
+            diskAccess++;
 
             assert node != null;
-            
-            double area = RectangleMethods.getArea(node.MBR);
-            if (area < 0.0001 && area > -0.0001) {
-            	continue;
-            }
 
             if (node.type.equals("L")) {//es una hoja, solo compara con su rectangulo
                 if (RectangleMethods.overlaps(node.MBR, s)) {
@@ -115,6 +114,7 @@ public class Rtree {
                 }
             }
         }
+        sb.append("-").append(diskAccess);
         return sb.toString();
     }
 
@@ -255,6 +255,22 @@ public class Rtree {
         }
         System.out.println(System.lineSeparator());
         
+    }
+    
+    
+    /**
+     * Calcula la altura del arbol actual.
+     * @return Returna la altura del alrbol.
+     */
+    static int treeHeigth() {
+        Node node = Rtree.loadNode(Rtree.treeId);
+        int height = 0;
+        assert node != null;
+        while (!node.type.equals("L")) {
+            height++;
+            node = Rtree.loadNode(node.registers.get(0).serialVersionUID);
+        }
+        return height;
     }
 }
 

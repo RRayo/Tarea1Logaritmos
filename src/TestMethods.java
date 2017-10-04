@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TestMethods {
@@ -25,10 +24,12 @@ public class TestMethods {
         }
     }
 
-    public static void searchN(long n) {
+    public static int searchN(long n) {
+        int totalDiskAccess = 0;
         for (int i = 0; i < n; i++) {
-            Rtree.search(generateRectangle());
+            totalDiskAccess = Integer.parseInt(Rtree.search(generateRectangle()).split("-")[1]);
         }
+        return totalDiskAccess;
     }
     
     public static List<Rectangle> crearRectangulos (Point[] highPoints, Point[] lowPoints) {
@@ -55,4 +56,6 @@ public class TestMethods {
         }
         return height;
     }
+    
+    
 }
