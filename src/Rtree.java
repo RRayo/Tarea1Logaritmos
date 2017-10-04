@@ -15,13 +15,12 @@ public class Rtree {
     public static SerialGenerator sg = new SerialGenerator();
     static String DIR;
     static long treeId;
-    static long M = 3L;
-    static long m = 1L;
+    static long M = 100L;
+    static long m = 40L;
     public static String path  = "/home/alejandro/tareas/8-semestre/ln/t1/Tarea1Logaritmos/temp/";
 
     public static ISplitter splitter;
 
-    //TODO tamaño 0
 
     /**
      * Contructor para el Rtree.
@@ -29,20 +28,10 @@ public class Rtree {
      */
     public Rtree(String temp){
         path = temp;
-        /*Node n = new Node("R");
-        Node l = new Node("L");
-        Node r = new Node("L");
-        n.saveNode();
-        l.saveNode();
-        r.saveNode();
-        n.addRegister(new Register(l.MBR,l.serialVersionUID), new LinkedList<>());
-        n.addRegister(new Register(r.MBR,r.serialVersionUID), new LinkedList<>());
-        treeId = n.serialVersionUID;
-        n.saveNode();*/
     }
 
     /**
-     * Genera una nueva raiz del arbol y sus hijos iniciales con .
+     * Genera una nueva raiz del arbol y sus hijos iniciales con 2 nodos hijos.
      * @param l Nodo izquierdo de la raiz.
      * @param r Nodo derecho de la raiz.
      */
@@ -76,7 +65,6 @@ public class Rtree {
             in = new ObjectInputStream(new FileInputStream(path + nodeName));
             return (Node) (in.readObject());
         } catch (Exception e) {
-            //System.out.println("No se encontro el nodo: " + UID);
             e.printStackTrace();
             System.exit(1);
             return null;
@@ -143,7 +131,6 @@ public class Rtree {
         while (node != null) {
 
             if (node.type.equals("L")) { //es hoja
-               //System.out.println("insert on node: " + node.serialVersionUID);
                 NodeMethods.addRegister(node, new Register(s, node.serialVersionUID), nodesStack);
                 node = null;
 
@@ -162,7 +149,6 @@ public class Rtree {
                     }
                 }
                 nodesStack.add(UID);
-                //System.out.println("Tamaño stack: " + nodesStack.size());
                 node = Rtree.loadNode(UID);
             }
         }

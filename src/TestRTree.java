@@ -15,7 +15,7 @@ public class TestRTree {
         NodeMethods.saveNode(l);
         NodeMethods.saveNode(r);
         Rtree.newRoot(l,r);
-        Rtree.splitter = new LinearSplit();
+        Rtree.splitter = new GreeneSplit();
 //        Node node1 = Rtree.loadNode(42L);
 //        System.out.println(node1.registers.size());
 //          System.out.println(node1.MBR.maxPoint.x);
@@ -75,8 +75,9 @@ public class TestRTree {
         }
         TestMethods.insertRectangles(r1);
 
-//        System.out.println("Root node: " + Rtree.treeId);
-//        TestMethods.insertN(24);
+        System.out.println("Root node: " + Rtree.treeId);
+        TestMethods.insertN(10000);
+        TestMethods.insertN(100);
         Rtree.printTree();
         Rtree.printLevelOrder();
         System.out.println("Search r = (0,0)x(6,6):  " + Rtree.search(new Rectangle(new Point(0.1,0.1), new Point(6,6))));
